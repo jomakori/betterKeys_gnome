@@ -1,0 +1,29 @@
+{
+  "id": "en_US_colemak",
+  "name": "English (US) Colemak",
+  "language": "en_US",
+  "type": "alphabetic",
+  "rows": [
+    {
+      "keys": ["Q", "W", "F", "P", "G", "J", "L", "U", "Y", ";"],
+      "height": 60
+    },
+    {
+      "keys": ["A", "R", "S", "T", "D", "H", "N", "E", "I", "O"],
+      "height": 60
+    },
+    {
+      "keys": ["Shift", "Z", "X", "C", "V", "B", "K", "M", "Backspace"],
+      "height": 60
+    },
+    {
+      "keys": ["?123", ",", "Space", ".", "Enter"],
+      "height": 60
+    }
+  ],
+  "keyWidth": 58,
+  "keyHeight": 60,
+  "spacing": 4,
+  "defaultShiftState": "lowercase",
+  "description": "Colemak keyboard layout designed for efficient and ergonomic typing"
+}

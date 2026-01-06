@@ -1,0 +1,28 @@
+{
+  "id": "en_US_qwerty",
+  "name": "English (US) QWERTY",
+  "language": "en_US",
+  "type": "alphabetic",
+  "rows": [
+    {
+      "keys": ["Q", "W", "E", "R", "T", "Y", "U", "I", "O", "P"],
+      "height": 60
+    },
+    {
+      "keys": ["A", "S", "D", "F", "G", "H", "J", "K", "L"],
+      "height": 60
+    },
+    {
+      "keys": ["Shift", "Z", "X", "C", "V", "B", "N", "M", "Backspace"],
+      "height": 60
+    },
+    {
+      "keys": ["?123", ",", "Space", ".", "Enter"],
+      "height": 60
+    }
+  ],
+  "keyWidth": 60,
+  "keyHeight": 60,
+  "spacing": 4,
+  "defaultShiftState": "lowercase"
+}

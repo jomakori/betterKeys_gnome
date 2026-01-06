@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.betterkeys" path="/org/gnome/shell/extensions/betterkeys/">
+    <key name="enabled-layouts" type="as">
+      <default>['en_US_qwerty']</default>
+      <summary>Enabled keyboard layouts</summary>
+      <description>List of enabled keyboard layouts.</description>
+    </key>
+    <key name="current-layout" type="s">
+      <default>'en_US_qwerty'</default>
+      <summary>Currently active keyboard layout</summary>
+      <description>The ID of the currently active keyboard layout.</description>
+    </key>
+    <key name="show-prediction-bar" type="b">
+      <default>true</default>
+      <summary>Show prediction bar</summary>
+      <description>Whether to show the predictive text suggestion bar.</description>
+    </key>
+    <key name="auto-correction-enabled" type="b">
+      <default>true</default>
+      <summary>Enable auto-correction</summary>
+      <description>Whether to automatically correct misspelled words.</description>
+    </key>
+    <key name="haptic-feedback-enabled" type="b">
+      <default>true</default>
+      <summary>Enable haptic feedback</summary>
+      <description>Whether to provide haptic feedback on key press.</description>
+    </key>
+    <key name="key-press-sound-enabled" type="b">
+      <default>false</default>
+      <summary>Enable key press sound</summary>
+      <description>Whether to play a sound on key press.</description>
+    </key>
+    <key name="theme-name" type="s">
+      <default>'default'</default>
+      <summary>Active theme</summary>
+      <description>The name of the currently active visual theme.</description>
+    </key>
+    <key name="application-layouts" type="a{ss}">
+      <default>{}</default>
+      <summary>Application-specific keyboard layouts</summary>
+      <description>Mapping of application IDs to preferred keyboard layout IDs. Example: {'org.gnome.Terminal': 'terminal_layout'}</description>
+    </key>
+    <key name="keyboard-height" type="i">
+      <default>300</default>
+      <summary>Keyboard height</summary>
+      <description>Height of the virtual keyboard in pixels.</description>
+    </key>
+    <key name="keyboard-opacity" type="d">
+      <default>0.95</default>
+      <summary>Keyboard opacity</summary>
+      <description>Opacity of the virtual keyboard (0.0 to 1.0).</description>
+    </key>
+    <key name="auto-show-enabled" type="b">
+      <default>true</default>
+      <summary>Auto-show keyboard</summary>
+      <description>Whether to automatically show the keyboard when a text field is focused.</description>
+    </key>
+    <key name="gesture-swipe-enabled" type="b">
+      <default>true</default>
+      <summary>Enable swipe gestures</summary>
+      <description>Whether to enable swipe gestures for navigation and editing.</description>
+    </key>
+    <key name="glide-typing-enabled" type="b">
+      <default>false</default>
+      <summary>Enable glide typing</summary>
+      <description>Whether to enable glide (swipe) typing for faster input.</description>
+    </key>
+    <key name="suggestion-count" type="i">
+      <default>3</default>
+      <summary>Number of suggestions</summary>
+      <description>Number of word suggestions to display (1-5).</description>
+    </key>
+    <key name="ml-learning-enabled" type="b">
+      <default>true</default>
+      <summary>Enable ML learning</summary>
+      <description>Whether to enable machine learning for personalized predictions.</description>
+    </key>
+    <key name="gesture-sensitivity" type="i">
+      <default>50</default>
+      <summary>Gesture sensitivity</summary>
+      <description>Sensitivity of gesture recognition (0-100).</description>
+    </key>
+    <key name="gesture-visualization" type="b">
+      <default>true</default>
+      <summary>Show gesture visualization</summary>
+      <description>Whether to show visual feedback for gestures.</description>
+    </key>
+    <key name="layout-auto-switch" type="b">
+      <default>true</default>
+      <summary>Auto-switch layouts</summary>
+      <description>Whether to automatically switch layouts based on application.</description>
+    </key>
+    <key name="show-layout-indicator" type="b">
+      <default>true</default>
+      <summary>Show layout indicator</summary>
+      <description>Whether to show the current layout indicator on the keyboard.</description>
+    </key>
+    <key name="layout-preview-on-hover" type="b">
+      <default>true</default>
+      <summary>Layout preview on hover</summary>
+      <description>Whether to show layout preview when hovering over the layout indicator.</description>
+    </key>
+    <key name="prediction-cache-size" type="i">
+      <default>1000</default>
+      <summary>Prediction cache size</summary>
+      <description>Maximum number of predictions to cache for performance.</description>
+    </key>
+    <key name="vocabulary-learning" type="b">
+      <default>true</default>
+      <summary>Vocabulary learning</summary>
+      <description>Whether to learn new words from user input.</description>
+    </key>
+    <key name="keyboard-size" type="s">
+      <default>'normal'</default>
+      <summary>Keyboard size</summary>
+      <description>Size of the keyboard: compact, normal, or large.</description>
+    </key>
+    <key name="docking-position" type="s">
+      <default>'bottom'</default>
+      <summary>Docking position</summary>
+      <description>Position where the keyboard docks: top, bottom, left, right, or floating.</description>
+    </key>
+    <key name="high-contrast-enabled" type="b">
+      <default>false</default>
+      <summary>High contrast mode</summary>
+      <description>Increase color contrast for better visibility.</description>
+    </key>
+    <key name="large-keys-enabled" type="b">
+      <default>false</default>
+      <summary>Large keys</summary>
+      <description>Increase key size for easier targeting.</description>
+    </key>
+    <key name="slow-motion-enabled" type="b">
+      <default>false</default>
+      <summary>Slow motion animations</summary>
+      <description>Slow down animations for better visibility.</description>
+    </key>
+    <key name="auto-hide-enabled" type="b">
+      <default>true</default>
+      <summary>Auto-hide keyboard</summary>
+      <description>Whether to automatically hide the keyboard when text field loses focus.</description>
+    </key>
+  </schema>
+</schemalist>

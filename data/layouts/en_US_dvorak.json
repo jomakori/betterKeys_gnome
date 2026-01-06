@@ -1,0 +1,29 @@
+{
+  "id": "en_US_dvorak",
+  "name": "English (US) Dvorak",
+  "language": "en_US",
+  "type": "alphabetic",
+  "rows": [
+    {
+      "keys": ["'", ",", ".", "P", "Y", "F", "G", "C", "R", "L"],
+      "height": 60
+    },
+    {
+      "keys": ["A", "O", "E", "U", "I", "D", "H", "T", "N", "S"],
+      "height": 60
+    },
+    {
+      "keys": ["Shift", ";", "Q", "J", "K", "X", "B", "M", "W", "V", "Backspace"],
+      "height": 60
+    },
+    {
+      "keys": ["?123", ",", "Space", ".", "Enter"],
+      "height": 60
+    }
+  ],
+  "keyWidth": 55,
+  "keyHeight": 60,
+  "spacing": 4,
+  "defaultShiftState": "lowercase",
+  "description": "Dvorak Simplified Keyboard layout designed for ergonomic typing"
+}

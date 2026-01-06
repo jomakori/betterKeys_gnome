@@ -1,0 +1,346 @@
+/* stylesheet.css - CSS styles for BetterKeys Virtual Keyboard */
+
+/* Base keyboard styles */
+.betterkeys-keyboard {
+    background-color: rgba(240, 240, 240, 0.95);
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    padding: 8px;
+}
+
+/* Key base styles */
+.betterkeys-key {
+    background-color: #ffffff;
+    border-radius: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #333333;
+    font-size: 18px;
+    font-weight: 500;
+    margin: 2px;
+    transition: all 0.1s ease;
+}
+
+.betterkeys-key:hover {
+    background-color: #f0f0f0;
+}
+
+.betterkeys-key-pressed {
+    background-color: #4a90e2 !important;
+    color: #ffffff !important;
+    transform: scale(0.95);
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Special key styles */
+.betterkeys-key-space {
+    min-width: 200px;
+}
+
+.betterkeys-key-enter {
+    background-color: #4a90e2;
+    color: #ffffff;
+}
+
+.betterkeys-key-backspace {
+    background-color: #ff6b6b;
+    color: #ffffff;
+}
+
+.betterkeys-key-shift {
+    background-color: #a0a0a0;
+    color: #ffffff;
+}
+
+.betterkeys-key-symbol {
+    background-color: #a0a0a0;
+    color: #ffffff;
+}
+
+.betterkeys-key-special {
+    font-size: 14px;
+}
+
+/* Theme: Default */
+.betterkeys-theme-default .betterkeys-key {
+    background-color: #ffffff;
+    color: #333333;
+}
+
+/* ============================================
+   Window & Container Styles
+   ============================================ */
+
+.betterkeys-window {
+    background-color: transparent;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.betterkeys-window-resizing {
+    opacity: 0.9;
+}
+
+/* Drag handle */
+.betterkeys-drag-handle {
+    background-color: rgba(128, 128, 128, 0.5);
+    border-radius: 4px;
+    margin: 4px auto;
+    cursor: grab;
+}
+
+.betterkeys-drag-handle:hover {
+    background-color: rgba(128, 128, 128, 0.8);
+}
+
+.betterkeys-keyboard-dragging .betterkeys-drag-handle {
+    background-color: rgba(64, 64, 64, 0.9);
+    cursor: grabbing;
+}
+
+/* Resize handle */
+.betterkeys-resize-handle {
+    background-color: rgba(128, 128, 128, 0.6);
+    border-radius: 4px;
+    cursor: se-resize;
+}
+
+.betterkeys-resize-handle:hover {
+    background-color: rgba(128, 128, 128, 0.9);
+}
+
+/* ============================================
+   Keyboard Size Variants
+   ============================================ */
+
+.betterkeys-size-compact .betterkeys-key {
+    font-size: 14px;
+    border-radius: 6px;
+}
+
+.betterkeys-size-normal .betterkeys-key {
+    font-size: 18px;
+    border-radius: 8px;
+}
+
+.betterkeys-size-large .betterkeys-key {
+    font-size: 22px;
+    border-radius: 10px;
+}
+
+/* ============================================
+   Key States & Modifiers
+   ============================================ */
+
+.betterkeys-key-hover {
+    background-color: #e8e8e8 !important;
+}
+
+.betterkeys-key-held {
+    background-color: #ffcc00 !important;
+    color: #000000 !important;
+    box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.betterkeys-key-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #cccccc !important;
+    color: #888888 !important;
+}
+
+.betterkeys-key-modifier-active {
+    background-color: #4a90e2 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+}
+
+/* ============================================
+   Animation Classes
+   ============================================ */
+
+.betterkeys-key-press-animation {
+    animation: betterkeys-key-press 0.2s ease;
+}
+
+@keyframes betterkeys-key-press {
+    0% { transform: scale(1); }
+    50% { transform: scale(0.92); }
+    100% { transform: scale(1); }
+}
+
+.betterkeys-ripple {
+    background-color: rgba(100, 150, 255, 0.3);
+    border-radius: 50%;
+    border: 2px solid rgba(100, 150, 255, 0.6);
+}
+
+.betterkeys-swipe-line {
+    background-color: rgba(255, 200, 0, 0.7);
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(255, 200, 0, 0.5);
+}
+
+.betterkeys-color-transition {
+    transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+/* ============================================
+   Icon Styles
+   ============================================ */
+
+.betterkeys-key-icon {
+    color: inherit;
+    icon-size: 24px;
+}
+
+/* ============================================
+   Theme Extensions
+   ============================================ */
+
+/* Dark theme adjustments */
+.betterkeys-theme-dark .betterkeys-drag-handle {
+    background-color: rgba(200, 200, 200, 0.3);
+}
+
+.betterkeys-theme-dark .betterkeys-resize-handle {
+    background-color: rgba(200, 200, 200, 0.4);
+}
+
+.betterkeys-theme-dark .betterkeys-key-hover {
+    background-color: #666666 !important;
+}
+
+.betterkeys-theme-dark .betterkeys-key-held {
+    background-color: #ffaa00 !important;
+    color: #000000 !important;
+}
+
+.betterkeys-theme-dark .betterkeys-key-disabled {
+    background-color: #444444 !important;
+    color: #777777 !important;
+}
+
+/* High contrast theme adjustments */
+.betterkeys-theme-high-contrast .betterkeys-drag-handle {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-resize-handle {
+    background-color: #ffffff;
+    border: 2px solid #000000;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-hover {
+    background-color: #ffff00 !important;
+    color: #000000 !important;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-held {
+    background-color: #ff0000 !important;
+    color: #ffffff !important;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-disabled {
+    background-color: #333333 !important;
+    color: #aaaaaa !important;
+    border-style: dashed;
+}
+
+/* ============================================
+   Responsive Adjustments
+   ============================================ */
+
+@media (max-width: 600px) {
+    .betterkeys-keyboard {
+        border-radius: 8px;
+        padding: 6px;
+    }
+    
+    .betterkeys-key {
+        font-size: 16px;
+        margin: 1px;
+    }
+    
+    .betterkeys-key-space {
+        min-width: 150px;
+    }
+}
+
+/* ============================================
+   Accessibility Enhancements
+   ============================================ */
+
+.betterkeys-key:focus-visible {
+    outline: 3px solid #4a90e2;
+    outline-offset: 2px;
+}
+
+.betterkeys-key-high-contrast-outline {
+    outline: 2px solid #ffffff;
+    outline-offset: 1px;
+}
+
+.betterkeys-theme-default .betterkeys-key-enter {
+    background-color: #4a90e2;
+}
+
+.betterkeys-theme-default .betterkeys-key-backspace {
+    background-color: #ff6b6b;
+}
+
+/* Theme: Dark */
+.betterkeys-theme-dark .betterkeys-keyboard {
+    background-color: rgba(40, 40, 40, 0.95);
+}
+
+.betterkeys-theme-dark .betterkeys-key {
+    background-color: #555555;
+    color: #ffffff;
+    border-color: rgba(255, 255, 255, 0.1);
+}
+
+.betterkeys-theme-dark .betterkeys-key:hover {
+    background-color: #666666;
+}
+
+.betterkeys-theme-dark .betterkeys-key-enter {
+    background-color: #2c5282;
+}
+
+.betterkeys-theme-dark .betterkeys-key-backspace {
+    background-color: #c53030;
+}
+
+/* Theme: High Contrast */
+.betterkeys-theme-high-contrast .betterkeys-keyboard {
+    background-color: #000000;
+    border: 2px solid #ffffff;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key {
+    background-color: #000000;
+    color: #ffffff;
+    border: 2px solid #ffffff;
+    font-weight: bold;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key:hover {
+    background-color: #333333;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-pressed {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-enter {
+    background-color: #ffff00;
+    color: #000000;
+}
+
+.betterkeys-theme-high-contrast .betterkeys-key-backspace {
+    background-color: #ff0000;
+    color: #ffffff;
+}
