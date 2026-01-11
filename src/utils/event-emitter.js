@@ -1,13 +1,11 @@
 /* src/utils/event-emitter.js - Custom event system for component communication */
 
-const { GObject } = imports.gi;
-
 /**
  * EventEmitter provides a lightweight, memory‑safe event system
- * for component communication within BetterKeys.
+ * for component communication within betterKeys.
  */
-const BetterKeysEventEmitter = GObject.registerClass(
-class BetterKeysEventEmitter extends GObject.Object {
+const betterKeysEventEmitter = GObject.registerClass(
+class betterKeysEventEmitter extends GObject.Object {
     _init() {
         super._init();
 
@@ -24,7 +22,7 @@ class BetterKeysEventEmitter extends GObject.Object {
             totalListenersRemoved: 0
         };
 
-        log('[BetterKeys] EventEmitter initialized');
+        log('[betterKeys] EventEmitter initialized');
     }
 
     /**
@@ -47,7 +45,7 @@ class BetterKeysEventEmitter extends GObject.Object {
 
         // Check listener limit
         if (listeners.length >= this._maxListeners) {
-            logError(`[BetterKeys] Event "${eventName}" exceeded max listeners (${this._maxListeners}). Possible memory leak.`);
+            logError(`[betterKeys] Event "${eventName}" exceeded max listeners (${this._maxListeners}). Possible memory leak.`);
         }
 
         const listener = {
@@ -143,7 +141,7 @@ class BetterKeysEventEmitter extends GObject.Object {
                     toRemove.push(listener.id);
                 }
             } catch (error) {
-                logError(`[BetterKeys] Error in event listener for "${eventName}": ${error}`);
+                logError(`[betterKeys] Error in event listener for "${eventName}": ${error}`);
                 // Continue with other listeners
             }
         }
@@ -191,12 +189,12 @@ class BetterKeysEventEmitter extends GObject.Object {
             const count = this.listenerCount(eventName);
             this._listeners.delete(eventName);
             this._stats.totalListenersRemoved += count;
-            log(`[BetterKeys] Removed all listeners for "${eventName}"`);
+            log(`[betterKeys] Removed all listeners for "${eventName}"`);
         } else {
             const total = this._totalListenerCount();
             this._listeners.clear();
             this._stats.totalListenersRemoved += total;
-            log('[BetterKeys] Removed all listeners for all events');
+            log('[betterKeys] Removed all listeners for all events');
         }
     }
 
@@ -310,9 +308,9 @@ class BetterKeysEventEmitter extends GObject.Object {
      */
     destroy() {
         this.removeAllListeners();
-        log('[BetterKeys] EventEmitter destroyed');
+        log('[betterKeys] EventEmitter destroyed');
     }
 });
 
 // Export the EventEmitter class
-var EventEmitter = BetterKeysEventEmitter;
+var EventEmitter = betterKeysEventEmitter;

@@ -1,17 +1,12 @@
 /* src/ui/window-manager.js - Keyboard window management */
 
-const { GObject, St, Clutter, Shell, Meta, Gio } = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+const { GObject, St, Clutter } = imports.gi;
 
-const KeyboardUI = Me.imports.src.ui.keyboard.KeyboardUI;
-
-const BetterKeysWindowManager = GObject.registerClass(
-class BetterKeysWindowManager extends GObject.Object {
+const betterKeysWindowManager = GObject.registerClass(
+class betterKeysWindowManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
-        
+
         this._settings = settingsManager;
         this._keyboardUI = null;
         this._window = null;
@@ -25,39 +20,39 @@ class BetterKeysWindowManager extends GObject.Object {
         this._isResizing = false;
         this._resizeStart = { x: 0, y: 0, width: 0, height: 0 };
         this._animationDuration = 200;
-        
+
         // Track active monitor
         this._updateMonitorGeometry();
-        
+
         // Connect to monitor changes
         global.display.connect('monitors-changed', this._onMonitorsChanged.bind(this));
         global.display.connect('workareas-changed', this._onWorkareasChanged.bind(this));
-        
-        log('[BetterKeys] WindowManager initialized');
+
+        log('[betterKeys] WindowManager initialized');
     }
-    
+
     /**
      * Set the keyboard UI instance to manage.
      * @param {KeyboardUI} keyboardUI - The keyboard UI widget.
      */
     setKeyboardUI(keyboardUI) {
         if (this._keyboardUI === keyboardUI) return;
-        
+
         if (this._keyboardUI) {
             this._keyboardUI.destroy();
         }
-        
+
         this._keyboardUI = keyboardUI;
-        
+
         // Create a window container for the keyboard
         this._createWindow();
-        
+
         // Apply current docking position
         this.setDockingPosition(this._dockingPosition);
-        
-        log('[BetterKeys] KeyboardUI attached to WindowManager');
+
+        log('[betterKeys] KeyboardUI attached to WindowManager');
     }
-    
+
     _createWindow() {
         // Create a container window (St.Widget) that holds the keyboard
         this._window = new St.Widget({
@@ -69,24 +64,24 @@ class BetterKeysWindowManager extends GObject.Object {
             width: 800,
             height: 300
         });
-        
+
         // Add keyboard UI as child
         if (this._keyboardUI) {
             this._window.add_child(this._keyboardUI);
         }
-        
+
         // Create resize handle (only for floating mode)
         this._createResizeHandle();
-        
+
         // Connect window events
         this._window.connect('button-press-event', this._onWindowButtonPress.bind(this));
         this._window.connect('button-release-event', this._onWindowButtonRelease.bind(this));
         this._window.connect('motion-event', this._onWindowMotion.bind(this));
-        
+
         // Initially hidden
         this._window.hide();
     }
-    
+
     _createResizeHandle() {
         this._resizeHandle = new St.Widget({
             reactive: true,
@@ -97,34 +92,34 @@ class BetterKeysWindowManager extends GObject.Object {
             x_align: Clutter.ActorAlign.END,
             y_align: Clutter.ActorAlign.END
         });
-        
+
         this._resizeHandle.connect('button-press-event', this._onResizeStart.bind(this));
         this._resizeHandle.connect('button-release-event', this._onResizeEnd.bind(this));
         this._resizeHandle.connect('motion-event', this._onResizeMove.bind(this));
-        
+
         this._window.add_child(this._resizeHandle);
         this._resizeHandle.hide();
     }
-    
+
     _onResizeStart(actor, event) {
         if (this._dockingPosition !== 'floating') return Clutter.EVENT_PROPAGATE;
-        
+
         this._isResizing = true;
         [this._resizeStart.x, this._resizeStart.y] = event.get_coords();
         this._resizeStart.width = this._window.width;
         this._resizeStart.height = this._window.height;
-        
+
         this._window.add_style_class_name('betterkeys-window-resizing');
         return Clutter.EVENT_STOP;
     }
-    
+
     _onResizeMove(actor, event) {
         if (!this._isResizing) return Clutter.EVENT_PROPAGATE;
-        
+
         let [x, y] = event.get_coords();
         let deltaX = x - this._resizeStart.x;
         let deltaY = y - this._resizeStart.y;
-        
+
         let newWidth = Math.max(
             this._constraints.minWidth,
             Math.min(this._constraints.maxWidth, this._resizeStart.width + deltaX)
@@ -133,68 +128,68 @@ class BetterKeysWindowManager extends GObject.Object {
             this._constraints.minHeight,
             Math.min(this._constraints.maxHeight, this._resizeStart.height + deltaY)
         );
-        
+
         this._window.width = newWidth;
         this._window.height = newHeight;
-        
+
         // Keep within screen bounds
         this._constrainToMonitor();
-        
+
         return Clutter.EVENT_STOP;
     }
-    
-    _onResizeEnd(actor, event) {
+
+    _onResizeEnd(_actor, _event) {
         if (!this._isResizing) return Clutter.EVENT_PROPAGATE;
-        
+
         this._isResizing = false;
         this._window.remove_style_class_name('betterkeys-window-resizing');
         return Clutter.EVENT_STOP;
     }
-    
-    _onWindowButtonPress(actor, event) {
+
+    _onWindowButtonPress(_actor, _event) {
         // Allow dragging in floating mode
         if (this._dockingPosition === 'floating') {
             // Start drag (optional)
         }
         return Clutter.EVENT_PROPAGATE;
     }
-    
-    _onWindowButtonRelease(actor, event) {
+
+    _onWindowButtonRelease(_actor, _event) {
         return Clutter.EVENT_PROPAGATE;
     }
-    
-    _onWindowMotion(actor, event) {
+
+    _onWindowMotion(_actor, _event) {
         return Clutter.EVENT_PROPAGATE;
     }
-    
+
     _updateMonitorGeometry() {
         let monitorIndex = global.display.get_primary_monitor();
         this._monitorGeometry = global.display.get_monitor_geometry(monitorIndex);
         this._monitorIndex = monitorIndex;
     }
-    
+
     _onMonitorsChanged() {
-        log('[BetterKeys] Monitor configuration changed');
+        log('[betterKeys] Monitor configuration changed');
         this._updateMonitorGeometry();
         this._updatePosition();
     }
-    
+
     _onWorkareasChanged() {
-        log('[BetterKeys] Work areas changed');
+        log('[betterKeys] Work areas changed');
         this._updatePosition();
     }
-    
+
     /**
      * Update window position based on docking position and monitor geometry.
      */
     _updatePosition() {
         if (!this._window || !this._monitorGeometry) return;
-        
+
         let { width: monitorWidth, height: monitorHeight, x: monitorX, y: monitorY } = this._monitorGeometry;
         let windowWidth = this._window.width;
         let windowHeight = this._window.height;
         let padding = 20;
-        
+
         switch (this._dockingPosition) {
             case 'top':
                 this._window.x = monitorX + Math.floor((monitorWidth - windowWidth) / 2);
@@ -217,7 +212,7 @@ class BetterKeysWindowManager extends GObject.Object {
                 this._constrainToMonitor();
                 break;
         }
-        
+
         // Update resize handle visibility
         if (this._resizeHandle) {
             if (this._dockingPosition === 'floating') {
@@ -227,22 +222,22 @@ class BetterKeysWindowManager extends GObject.Object {
             }
         }
     }
-    
+
     _constrainToMonitor() {
         if (!this._window || !this._monitorGeometry) return;
-        
+
         let { width: monitorWidth, height: monitorHeight, x: monitorX, y: monitorY } = this._monitorGeometry;
         let windowWidth = this._window.width;
         let windowHeight = this._window.height;
-        
+
         // Ensure window stays within monitor bounds
         let newX = Math.max(monitorX, Math.min(monitorX + monitorWidth - windowWidth, this._window.x));
         let newY = Math.max(monitorY, Math.min(monitorY + monitorHeight - windowHeight, this._window.y));
-        
+
         this._window.x = newX;
         this._window.y = newY;
     }
-    
+
     /**
      * Set docking position and update window.
      * @param {string} position - One of 'top', 'bottom', 'left', 'right', 'floating'.
@@ -250,12 +245,12 @@ class BetterKeysWindowManager extends GObject.Object {
     setDockingPosition(position) {
         const validPositions = ['top', 'bottom', 'left', 'right', 'floating'];
         if (!validPositions.includes(position)) {
-            logError(`[BetterKeys] Invalid docking position: ${position}`);
+            logError(`[betterKeys] Invalid docking position: ${position}`);
             return;
         }
-        
+
         this._dockingPosition = position;
-        
+
         // Update floating position if switching to floating
         if (position === 'floating' && this._window) {
             // Center on screen initially
@@ -263,23 +258,23 @@ class BetterKeysWindowManager extends GObject.Object {
             this._window.x = monitorX + Math.floor((monitorWidth - this._window.width) / 2);
             this._window.y = monitorY + Math.floor((monitorHeight - this._window.height) / 2);
         }
-        
+
         this._updatePosition();
-        log(`[BetterKeys] Docking position set to ${position}`);
+        log(`[betterKeys] Docking position set to ${position}`);
     }
-    
+
     /**
      * Show the keyboard window with animation.
      */
     show() {
         if (this._isVisible || !this._window) return;
-        
+
         // Add to stage
         Main.uiGroup.add_child(this._window);
-        
+
         // Set initial opacity for fade-in
         this._window.opacity = 0;
-        
+
         // Animate
         this._window.ease({
             opacity: 255,
@@ -287,17 +282,17 @@ class BetterKeysWindowManager extends GObject.Object {
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => {
                 this._isVisible = true;
-                log('[BetterKeys] Keyboard window shown');
+                log('[betterKeys] Keyboard window shown');
             }
         });
     }
-    
+
     /**
      * Hide the keyboard window with animation.
      */
     hide() {
         if (!this._isVisible || !this._window) return;
-        
+
         this._window.ease({
             opacity: 0,
             duration: this._animationDuration,
@@ -305,11 +300,11 @@ class BetterKeysWindowManager extends GObject.Object {
             onComplete: () => {
                 Main.uiGroup.remove_child(this._window);
                 this._isVisible = false;
-                log('[BetterKeys] Keyboard window hidden');
+                log('[betterKeys] Keyboard window hidden');
             }
         });
     }
-    
+
     /**
      * Toggle keyboard visibility.
      */
@@ -320,7 +315,7 @@ class BetterKeysWindowManager extends GObject.Object {
             this.show();
         }
     }
-    
+
     /**
      * Update window size constraints.
      * @param {Object} constraints - Object with minWidth, minHeight, maxWidth, maxHeight.
@@ -328,7 +323,7 @@ class BetterKeysWindowManager extends GObject.Object {
     setConstraints(constraints) {
         Object.assign(this._constraints, constraints);
     }
-    
+
     /**
      * Move window to specific monitor.
      * @param {number} monitorIndex - Monitor index.
@@ -336,15 +331,15 @@ class BetterKeysWindowManager extends GObject.Object {
     setMonitor(monitorIndex) {
         let nMonitors = global.display.get_n_monitors();
         if (monitorIndex < 0 || monitorIndex >= nMonitors) {
-            logError(`[BetterKeys] Invalid monitor index: ${monitorIndex}`);
+            logError(`[betterKeys] Invalid monitor index: ${monitorIndex}`);
             return;
         }
-        
+
         this._monitorIndex = monitorIndex;
         this._monitorGeometry = global.display.get_monitor_geometry(monitorIndex);
         this._updatePosition();
     }
-    
+
     /**
      * Get current window geometry.
      * @returns {Object} - {x, y, width, height}
@@ -358,7 +353,7 @@ class BetterKeysWindowManager extends GObject.Object {
             height: this._window.height
         };
     }
-    
+
     /**
      * Set window geometry (only in floating mode).
      * @param {number} x - X coordinate.
@@ -368,10 +363,10 @@ class BetterKeysWindowManager extends GObject.Object {
      */
     setGeometry(x, y, width, height) {
         if (this._dockingPosition !== 'floating') {
-            logError('[BetterKeys] Cannot set geometry in non-floating mode');
+            logError('[betterKeys] Cannot set geometry in non-floating mode');
             return;
         }
-        
+
         if (this._window) {
             this._window.x = x;
             this._window.y = y;
@@ -380,22 +375,22 @@ class BetterKeysWindowManager extends GObject.Object {
             this._constrainToMonitor();
         }
     }
-    
+
     destroy() {
         if (this._window) {
             this.hide();
             this._window.destroy();
             this._window = null;
         }
-        
+
         if (this._keyboardUI) {
             this._keyboardUI.destroy();
             this._keyboardUI = null;
         }
-        
-        log('[BetterKeys] WindowManager destroyed');
+
+        log('[betterKeys] WindowManager destroyed');
     }
 });
 
 // Export the WindowManager class
-var WindowManager = BetterKeysWindowManager;
+var WindowManager = betterKeysWindowManager;

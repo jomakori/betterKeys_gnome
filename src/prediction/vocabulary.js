@@ -39,7 +39,7 @@ class Vocabulary extends GObject.Object {
         // Load default vocabulary
         this._loadDefaultVocabulary();
 
-        log('[BetterKeys] Vocabulary initialized');
+        log('[betterKeys] Vocabulary initialized');
     }
 
     /**
@@ -53,13 +53,13 @@ class Vocabulary extends GObject.Object {
 
             if (enUsFile.query_exists(null)) {
                 this._loadVocabularyFile(enUsFile, 'en_US');
-                log(`[BetterKeys] Loaded vocabulary from JSON (${this._words.size} words)`);
+                log(`[betterKeys] Loaded vocabulary from JSON (${this._words.size} words)`);
             } else {
                 // Try system dictionary as fallback
                 this._loadSystemDict('en_US');
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to load vocabulary: ${error}`);
+            logError(`[betterKeys] Failed to load vocabulary: ${error}`);
             // Fallback to default built-in words
             this._createDefaultVocabulary();
         }
@@ -87,7 +87,7 @@ class Vocabulary extends GObject.Object {
             }
 
             if (!dictFile) {
-                log('[BetterKeys] No system dictionary found, using default vocabulary');
+                log('[betterKeys] No system dictionary found, using default vocabulary');
                 this._createDefaultVocabulary();
                 return;
             }
@@ -116,9 +116,9 @@ class Vocabulary extends GObject.Object {
                 });
             });
 
-            log(`[BetterKeys] Loaded ${wordsToAdd.length} words from system dictionary`);
+            log(`[betterKeys] Loaded ${wordsToAdd.length} words from system dictionary`);
         } catch (error) {
-            logError(`[BetterKeys] Failed to load system dictionary: ${error}`);
+            logError(`[betterKeys] Failed to load system dictionary: ${error}`);
             this._createDefaultVocabulary();
         }
     }
@@ -148,7 +148,7 @@ class Vocabulary extends GObject.Object {
             });
         });
 
-        log(`[BetterKeys] Created default vocabulary with ${defaultWords.length} words`);
+        log(`[betterKeys] Created default vocabulary with ${defaultWords.length} words`);
     }
 
     /**
@@ -178,9 +178,9 @@ class Vocabulary extends GObject.Object {
                 });
             }
 
-            log(`[BetterKeys] Loaded vocabulary from ${file.get_path()} (${language})`);
+            log(`[betterKeys] Loaded vocabulary from ${file.get_path()} (${language})`);
         } catch (error) {
-            logError(`[BetterKeys] Failed to load vocabulary file: ${error}`);
+            logError(`[betterKeys] Failed to load vocabulary file: ${error}`);
         }
     }
 
@@ -577,10 +577,10 @@ class Vocabulary extends GObject.Object {
                 });
             });
 
-            log(`[BetterKeys] Imported ${data.words.length} words`);
+            log(`[betterKeys] Imported ${data.words.length} words`);
             return true;
         } catch (error) {
-            logError(`[BetterKeys] Failed to import vocabulary: ${error}`);
+            logError(`[betterKeys] Failed to import vocabulary: ${error}`);
             return false;
         }
     }
@@ -598,7 +598,7 @@ class Vocabulary extends GObject.Object {
         this._cacheHits = 0;
         this._cacheMisses = 0;
 
-        log('[BetterKeys] Vocabulary cleared');
+        log('[betterKeys] Vocabulary cleared');
     }
 
     /**
@@ -607,7 +607,7 @@ class Vocabulary extends GObject.Object {
      */
     updateConfig(config) {
         Object.assign(this._config, config);
-        log('[BetterKeys] Vocabulary configuration updated');
+        log('[betterKeys] Vocabulary configuration updated');
     }
 
     /**
@@ -624,6 +624,3 @@ Vocabulary.signals = {
     'user-vocabulary-changed': { param_types: [GObject.TYPE_STRING] },
     'vocabulary-updated': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export
-var Vocabulary = Vocabulary;

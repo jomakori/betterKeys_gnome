@@ -1,5 +1,5 @@
 #!/bin/bash
-# setup-extension.sh - Complete setup and enable BetterKeys extension
+# setup-extension.sh - Complete setup and enable betterKeys extension
 
 set -e
 
@@ -8,7 +8,7 @@ EXTENSION_DIR="$HOME/.local/share/gnome-shell/extensions/$EXTENSION_UUID"
 PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "=========================================="
-echo "BetterKeys Extension Setup"
+echo "betterKeys Extension Setup"
 echo "=========================================="
 echo ""
 
@@ -45,11 +45,11 @@ echo "⚠️  Direct enable failed. Attempting to restart GNOME Shell..."
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
     echo "Detected X11 session"
     echo "Restarting GNOME Shell..."
-    
+
     # Restart GNOME Shell on X11
     DISPLAY=:0 gnome-shell --replace &
     sleep 3
-    
+
     # Try to enable again
     if gnome-extensions enable "$EXTENSION_UUID" 2>/dev/null; then
         echo "✓ Extension enabled successfully after restart!"

@@ -50,7 +50,7 @@ class GestureRecognizer extends GObject.Object {
         // Default gesture mappings
         this._setupDefaultMappings();
 
-        log('[BetterKeys] GestureRecognizer initialized');
+        log('[betterKeys] GestureRecognizer initialized');
     }
 
     /**
@@ -59,35 +59,35 @@ class GestureRecognizer extends GObject.Object {
     _setupDefaultMappings() {
         this._gestureHandlers.set('swipe-left', () => {
             this.emit('gesture-detected', 'swipe-left', {});
-            log('[BetterKeys] Gesture: swipe left');
+            log('[betterKeys] Gesture: swipe left');
         });
         this._gestureHandlers.set('swipe-right', () => {
             this.emit('gesture-detected', 'swipe-right', {});
-            log('[BetterKeys] Gesture: swipe right');
+            log('[betterKeys] Gesture: swipe right');
         });
         this._gestureHandlers.set('swipe-up', () => {
             this.emit('gesture-detected', 'swipe-up', {});
-            log('[BetterKeys] Gesture: swipe up');
+            log('[betterKeys] Gesture: swipe up');
         });
         this._gestureHandlers.set('swipe-down', () => {
             this.emit('gesture-detected', 'swipe-down', {});
-            log('[BetterKeys] Gesture: swipe down');
+            log('[betterKeys] Gesture: swipe down');
         });
         this._gestureHandlers.set('long-press', () => {
             this.emit('gesture-detected', 'long-press', {});
-            log('[BetterKeys] Gesture: long press');
+            log('[betterKeys] Gesture: long press');
         });
         this._gestureHandlers.set('pinch-in', () => {
             this.emit('gesture-detected', 'pinch-in', {});
-            log('[BetterKeys] Gesture: pinch in');
+            log('[betterKeys] Gesture: pinch in');
         });
         this._gestureHandlers.set('pinch-out', () => {
             this.emit('gesture-detected', 'pinch-out', {});
-            log('[BetterKeys] Gesture: pinch out');
+            log('[betterKeys] Gesture: pinch out');
         });
         this._gestureHandlers.set('double-tap', () => {
             this.emit('gesture-detected', 'double-tap', {});
-            log('[BetterKeys] Gesture: double tap');
+            log('[betterKeys] Gesture: double tap');
         });
     }
 
@@ -95,7 +95,7 @@ class GestureRecognizer extends GObject.Object {
      * Start gesture recognition.
      */
     start() {
-        log('[BetterKeys] Gesture recognition started');
+        log('[betterKeys] Gesture recognition started');
     }
 
     /**
@@ -104,7 +104,7 @@ class GestureRecognizer extends GObject.Object {
     stop() {
         this._activeTouches.clear();
         this._gestureHistory = [];
-        log('[BetterKeys] Gesture recognition stopped');
+        log('[betterKeys] Gesture recognition stopped');
     }
 
     /**
@@ -274,7 +274,6 @@ class GestureRecognizer extends GObject.Object {
 
         // Check if threshold exceeded
         if (distance >= this._config.swipeThreshold) {
-            const angle = Math.atan2(dy, dx) * 180 / Math.PI;
             const velocity = Math.sqrt(touch.velocityX * touch.velocityX + touch.velocityY * touch.velocityY);
 
             if (velocity >= this._config.swipeVelocityThreshold) {
@@ -292,8 +291,7 @@ class GestureRecognizer extends GObject.Object {
                     endX: last.x,
                     endY: last.y,
                     distance,
-                    velocity,
-                    angle
+                    velocity
                 });
 
                 // Reset start point to avoid repeated detection
@@ -382,7 +380,7 @@ class GestureRecognizer extends GObject.Object {
     /**
      * Detect double‑tap gesture.
      */
-    _detectDoubleTap(touchId, endTime) {
+    _detectDoubleTap(touchId, _endTime) {
         // This is a simplified implementation; a real one would track
         // previous tap timing and position.
         // For now, we'll just log.
@@ -440,7 +438,7 @@ class GestureRecognizer extends GObject.Object {
      */
     registerGestureHandler(gestureName, handler) {
         this._gestureHandlers.set(gestureName, handler);
-        log(`[BetterKeys] Registered handler for gesture: ${gestureName}`);
+        log(`[betterKeys] Registered handler for gesture: ${gestureName}`);
     }
 
     /**
@@ -448,7 +446,7 @@ class GestureRecognizer extends GObject.Object {
      */
     unregisterGestureHandler(gestureName) {
         this._gestureHandlers.delete(gestureName);
-        log(`[BetterKeys] Unregistered handler for gesture: ${gestureName}`);
+        log(`[betterKeys] Unregistered handler for gesture: ${gestureName}`);
     }
 
     /**
@@ -457,7 +455,7 @@ class GestureRecognizer extends GObject.Object {
      */
     updateConfig(config) {
         Object.assign(this._config, config);
-        log('[BetterKeys] Gesture configuration updated');
+        log('[betterKeys] Gesture configuration updated');
     }
 
     /**
@@ -481,7 +479,7 @@ class GestureRecognizer extends GObject.Object {
      */
     clearHistory() {
         this._gestureHistory = [];
-        log('[BetterKeys] Gesture history cleared');
+        log('[betterKeys] Gesture history cleared');
     }
 
     /**
@@ -708,8 +706,6 @@ class GestureRecognizer extends GObject.Object {
         const dy = end.y - start.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
         const angle = Math.atan2(dy, dx) * 180 / Math.PI;
-
-        // Normalize angle to 0-360
         const normalizedAngle = (angle + 360) % 360;
 
         // Simple direction-based recognition
@@ -772,7 +768,7 @@ class GestureRecognizer extends GObject.Object {
         this._strokes = [];
         this._currentStroke = null;
         this._strokeRecognitionCache.clear();
-        log('[BetterKeys] Strokes cleared');
+        log('[betterKeys] Strokes cleared');
     }
 
     /**
@@ -807,5 +803,5 @@ GestureRecognizer.signals = {
     'gesture-detected': { param_types: [GObject.TYPE_STRING, GObject.TYPE_POINTER] }
 };
 
-// Export the GestureRecognizer class
-var GestureRecognizer = GestureRecognizer;
+// Export the GestureRecognizer class (already defined as GestureRecognizer)
+// var GestureRecognizer = GestureRecognizer; // Removed duplicate declaration

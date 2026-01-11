@@ -1,7 +1,6 @@
-/* src/main.js - Main orchestration module for BetterKeys */
+/* src/main.js - Main orchestration module for betterKeys */
 
-const { GObject, St, Clutter, Gio } = imports.gi;
-const Main = imports.ui.main;
+const { GObject } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -23,11 +22,18 @@ const AnimationManager = Me.imports.src.ui.animations.AnimationManager;
 const AccessibilityManager = Me.imports.src.ui.accessibility.AccessibilityManager;
 const InputMethodBridge = Me.imports.src.ui['input-method-bridge'].InputMethodBridge;
 
-const BetterKeysKeyboardManager = GObject.registerClass(
-class BetterKeysKeyboardManager extends GObject.Object {
+// Enhanced feature managers
+const ClipboardHistoryManager = Me.imports.src.clipboard['history-manager'].ClipboardHistoryManager;
+const EmojiManager = Me.imports.src.emoji['emoji-manager'].EmojiManager;
+const ThemeManager = Me.imports.src.ui['theme-manager'].ThemeManager;
+const VoiceInput = Me.imports.src.input['voice-input'].VoiceInput;
+const SpecialCharsPanel = Me.imports.src.ui['special-chars-panel'].SpecialCharsPanel;
+
+const betterKeysKeyboardManager = GObject.registerClass(
+class betterKeysKeyboardManager extends GObject.Object {
     _init() {
         super._init();
-        
+
         this._settings = new SettingsManager();
         this._keyboardUI = null;
         this._keyboardCore = null;
@@ -39,24 +45,31 @@ class BetterKeysKeyboardManager extends GObject.Object {
         this._inputValidator = null;
         this._eventEmitter = null;
         this._isEnabled = false;
-        
+
         // New UI managers
         this._windowManager = null;
         this._visibilityManager = null;
         this._animationManager = null;
         this._accessibilityManager = null;
         this._inputMethodBridge = null;
-        
-        log('[BetterKeys] KeyboardManager initialized');
+
+        // Enhanced feature managers
+        this._clipboardHistoryManager = null;
+        this._emojiManager = null;
+        this._themeManager = null;
+        this._voiceInput = null;
+        this._specialCharsPanel = null;
+
+        log('[betterKeys] KeyboardManager initialized');
     }
-    
+
     enable() {
         if (this._isEnabled) {
             return;
         }
-        
-        log('[BetterKeys] Enabling keyboard manager');
-        
+
+        log('[betterKeys] Enabling keyboard manager');
+
         try {
             // Create core components
             this._eventEmitter = new EventEmitter();
@@ -65,32 +78,57 @@ class BetterKeysKeyboardManager extends GObject.Object {
             this._keyPressHandler = new KeyPressHandler(this._settings);
             this._gestureRecognizer = new GestureRecognizer(this._settings);
             this._inputValidator = new InputValidator(this._settings);
-            
+
             // Create the keyboard UI
             this._keyboardUI = new KeyboardUI(this._settings);
-            
+
             // Create UI managers
             this._windowManager = new WindowManager(this._settings);
             this._windowManager.setKeyboardUI(this._keyboardUI);
             this._keyboardUI.setWindowManager(this._windowManager);
-            
+
             this._animationManager = new AnimationManager();
             this._animationManager.start();
-            
+
             this._accessibilityManager = new AccessibilityManager(this._settings);
             this._accessibilityManager.setKeyboardUI(this._keyboardUI);
-            
+
             this._inputMethodBridge = new InputMethodBridge(this._settings);
             this._inputMethodBridge.setKeyboardUI(this._keyboardUI);
-            
+
             this._visibilityManager = new VisibilityManager(this._settings, this._windowManager);
             this._visibilityManager.setKeyboardUI(this._keyboardUI);
             this._visibilityManager.enable();
-            
+
+            // Create enhanced feature managers
+            this._clipboardHistoryManager = new ClipboardHistoryManager(this._settings);
+            this._emojiManager = new EmojiManager(this._settings);
+            this._themeManager = new ThemeManager(this._settings);
+            this._voiceInput = new VoiceInput(this._settings);
+            this._specialCharsPanel = new SpecialCharsPanel(this._settings);
+
+            // Connect managers to keyboard UI where needed
+            if (this._themeManager && this._keyboardUI) {
+                this._themeManager.setKeyboardUI(this._keyboardUI);
+                this._themeManager.applyCurrentTheme();
+            }
+            if (this._clipboardHistoryManager && this._inputMethodBridge) {
+                // Optionally connect clipboard manager to input method bridge for paste actions
+            }
+            if (this._emojiManager && this._keyboardUI) {
+                // Connect emoji manager to keyboard UI for emoji panel
+            }
+            if (this._voiceInput && this._keyboardUI) {
+                // Connect voice input to keyboard UI for microphone button
+            }
+            if (this._specialCharsPanel && this._keyboardUI) {
+                // Connect special chars panel to keyboard UI
+            }
+
             // Create input event handler
             this._inputHandler = new InputEventHandler(this._keyboardUI, this._settings);
             this._inputHandler.setGestureRecognizer(this._gestureRecognizer);
-            
+
             // Create keyboard core manager
             this._keyboardCore = new KeyboardCoreManager(this._settings);
             this._keyboardCore.enable(
@@ -100,72 +138,94 @@ class BetterKeysKeyboardManager extends GObject.Object {
                 this._textEngine,
                 this._keyPressHandler
             );
-            
+
             // Connect to settings changes
             this._settings.connect('changed', this._onSettingsChanged.bind(this));
-            
+
             // Start input handling
             this._inputHandler.start();
-            
+
             this._isEnabled = true;
-            log('[BetterKeys] Keyboard manager enabled successfully');
+            log('[betterKeys] Keyboard manager enabled successfully');
         } catch (error) {
-            logError(`[BetterKeys] Failed to enable keyboard manager: ${error}`);
+            logError(`[betterKeys] Failed to enable keyboard manager: ${error}`);
             logError(error.stack);
         }
     }
-    
+
     disable() {
         if (!this._isEnabled) {
             return;
         }
-        
-        log('[BetterKeys] Disabling keyboard manager');
-        
+
+        log('[betterKeys] Disabling keyboard manager');
+
         try {
             // Disable visibility manager first (removes hotkey, focus tracking)
             if (this._visibilityManager) {
                 this._visibilityManager.disable();
                 this._visibilityManager = null;
             }
-            
+
             // Destroy UI managers
             if (this._windowManager) {
                 this._windowManager.destroy();
                 this._windowManager = null;
             }
-            
+
             if (this._animationManager) {
                 this._animationManager.destroy();
                 this._animationManager = null;
             }
-            
+
             if (this._accessibilityManager) {
                 this._accessibilityManager.destroy();
                 this._accessibilityManager = null;
             }
-            
+
             if (this._inputMethodBridge) {
                 this._inputMethodBridge.destroy();
                 this._inputMethodBridge = null;
             }
-            
+
+            // Destroy enhanced feature managers
+            if (this._clipboardHistoryManager) {
+                this._clipboardHistoryManager.destroy();
+                this._clipboardHistoryManager = null;
+            }
+            if (this._emojiManager) {
+                this._emojiManager.destroy();
+                this._emojiManager = null;
+            }
+            if (this._themeManager) {
+                this._themeManager.destroy();
+                this._themeManager = null;
+            }
+            if (this._voiceInput) {
+                this._voiceInput.destroy();
+                this._voiceInput = null;
+            }
+            if (this._specialCharsPanel) {
+                this._specialCharsPanel.destroy();
+                this._specialCharsPanel = null;
+            }
+
             // Disable core components
             if (this._keyboardCore) {
                 this._keyboardCore.disable();
                 this._keyboardCore = null;
             }
-            
+
             if (this._inputHandler) {
                 this._inputHandler.stop();
                 this._inputHandler = null;
             }
-            
+
             if (this._keyboardUI) {
                 this._keyboardUI.destroy();
                 this._keyboardUI = null;
             }
-            
+
             // Clean up other components
             this._layoutManager = null;
             this._textEngine = null;
@@ -173,59 +233,59 @@ class BetterKeysKeyboardManager extends GObject.Object {
             this._gestureRecognizer = null;
             this._inputValidator = null;
             this._eventEmitter = null;
-            
+
             this._isEnabled = false;
-            log('[BetterKeys] Keyboard manager disabled successfully');
+            log('[betterKeys] Keyboard manager disabled successfully');
         } catch (error) {
-            logError(`[BetterKeys] Failed to disable keyboard manager: ${error}`);
+            logError(`[betterKeys] Failed to disable keyboard manager: ${error}`);
             logError(error.stack);
         }
     }
-    
+
     _onSettingsChanged(settings, key) {
-        log(`[BetterKeys] Setting changed: ${key}`);
-        
+        log(`[betterKeys] Setting changed: ${key}`);
+
         if (this._keyboardUI) {
             this._keyboardUI.onSettingsChanged(key);
         }
-        
+
         // Propagate to core manager
         if (this._keyboardCore) {
             this._keyboardCore._onSettingsChanged(settings, key);
         }
     }
-    
+
     showKeyboard() {
         if (this._keyboardCore && this._isEnabled) {
             this._keyboardCore.show();
         }
     }
-    
+
     hideKeyboard() {
         if (this._keyboardCore && this._isEnabled) {
             this._keyboardCore.hide();
         }
     }
-    
+
     toggleKeyboard() {
         if (this._keyboardCore && this._isEnabled) {
             this._keyboardCore.toggle();
         }
     }
-    
+
     // Additional methods for external control
     getKeyboardCore() {
         return this._keyboardCore;
     }
-    
+
     getInputHandler() {
         return this._inputHandler;
     }
-    
+
     getTextEngine() {
         return this._textEngine;
     }
 });
 
 // Export the KeyboardManager class
-var KeyboardManager = BetterKeysKeyboardManager;
+var KeyboardManager = betterKeysKeyboardManager;

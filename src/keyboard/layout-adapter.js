@@ -1,6 +1,6 @@
 /* src/keyboard/layout-adapter.js - Dynamic layout adaptation based on context */
 
-const { GObject, Gio, GLib, Meta } = imports.gi;
+const { GObject, GLib, Meta } = imports.gi;
 
 /**
  * LayoutAdapter - Adapts keyboard layout based on active window and input context
@@ -40,7 +40,7 @@ class LayoutAdapter extends GObject.Object {
         // Load app rules
         this._loadAppRules();
 
-        log('[BetterKeys] LayoutAdapter initialized');
+        log('[betterKeys] LayoutAdapter initialized');
     }
 
     /**
@@ -66,9 +66,9 @@ class LayoutAdapter extends GObject.Object {
             // Monitor active window
             this._updateActiveWindow();
 
-            log('[BetterKeys] LayoutAdapter started');
+            log('[betterKeys] LayoutAdapter started');
         } catch (error) {
-            logError(`[BetterKeys] Failed to start LayoutAdapter: ${error}`);
+            logError(`[betterKeys] Failed to start LayoutAdapter: ${error}`);
         }
     }
 
@@ -87,7 +87,7 @@ class LayoutAdapter extends GObject.Object {
         this._windowTracker = null;
         this._focusWindow = null;
 
-        log('[BetterKeys] LayoutAdapter stopped');
+        log('[betterKeys] LayoutAdapter stopped');
     }
 
     /**
@@ -140,9 +140,9 @@ class LayoutAdapter extends GObject.Object {
             // Detect input type based on window properties
             this._detectInputType();
 
-            log(`[BetterKeys] Active window: ${this._currentApp.id} (${title})`);
+            log(`[betterKeys] Active window: ${this._currentApp.id} (${title})`);
         } catch (error) {
-            logError(`[BetterKeys] Failed to update active window: ${error}`);
+            logError(`[betterKeys] Failed to update active window: ${error}`);
         }
     }
 
@@ -180,7 +180,7 @@ class LayoutAdapter extends GObject.Object {
             this._currentInputType = 'text';
         }
 
-        log(`[BetterKeys] Detected input type: ${this._currentInputType}`);
+        log(`[betterKeys] Detected input type: ${this._currentInputType}`);
     }
 
     /**
@@ -276,10 +276,10 @@ class LayoutAdapter extends GObject.Object {
 
             this._lastSwitchTime = GLib.get_monotonic_time() / 1000;
 
-            log(`[BetterKeys] Layout switched to: ${layoutId}`);
+            log(`[betterKeys] Layout switched to: ${layoutId}`);
             this.emit('layout-switched', layoutId, this._previousLayout);
         } catch (error) {
-            logError(`[BetterKeys] Failed to switch layout: ${error}`);
+            logError(`[betterKeys] Failed to switch layout: ${error}`);
         }
     }
 
@@ -323,7 +323,7 @@ class LayoutAdapter extends GObject.Object {
                 });
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to load custom rules: ${error}`);
+            logError(`[betterKeys] Failed to load custom rules: ${error}`);
         }
     }
 
@@ -348,7 +348,7 @@ class LayoutAdapter extends GObject.Object {
         // Clear cache for this app
         this._clearCacheForApp(appId);
 
-        log(`[BetterKeys] Added layout rule for ${appId}: ${rule.layout}`);
+        log(`[betterKeys] Added layout rule for ${appId}: ${rule.layout}`);
         return true;
     }
 
@@ -361,7 +361,7 @@ class LayoutAdapter extends GObject.Object {
         const removed = this._appRules.delete(appId);
         if (removed) {
             this._clearCacheForApp(appId);
-            log(`[BetterKeys] Removed layout rule for ${appId}`);
+            log(`[betterKeys] Removed layout rule for ${appId}`);
         }
         return removed;
     }
@@ -455,7 +455,7 @@ class LayoutAdapter extends GObject.Object {
      */
     updateConfig(config) {
         Object.assign(this._config, config);
-        log('[BetterKeys] LayoutAdapter configuration updated');
+        log('[betterKeys] LayoutAdapter configuration updated');
     }
 
     /**
@@ -471,7 +471,7 @@ class LayoutAdapter extends GObject.Object {
      */
     clearCache() {
         this._layoutCache.clear();
-        log('[BetterKeys] Layout cache cleared');
+        log('[betterKeys] Layout cache cleared');
     }
 });
 
@@ -480,6 +480,3 @@ LayoutAdapter.signals = {
     'layout-switched': { param_types: [GObject.TYPE_STRING, GObject.TYPE_STRING] },
     'context-changed': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export
-var LayoutAdapter = LayoutAdapter;

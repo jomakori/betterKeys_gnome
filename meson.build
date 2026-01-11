@@ -1,9 +1,12 @@
-# meson.build - Build configuration for BetterKeys Virtual Keyboard extension
+# meson.build - Build configuration for betterKeys Virtual Keyboard extension
 
-project('betterkeys', 'c', version: '1.0')
+project('betterkeys', version: '1.0')
 
 # Dependencies
 gnome = import('gnome')
+
+# Set installation directory to user's local extensions directory
+extension_dir = join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com')
 
 # Extension files
 extension_sources = [
@@ -26,10 +29,24 @@ schema_files = [
   'schemas/org.gnome.shell.extensions.betterkeys.gschema.xml'
 ]
 
-# Install extension files
-install_subdir('.',
-  install_dir: join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com'),
-  exclude_files: ['meson.build', 'meson.options', 'README.md', 'CHANGELOG.md']
+# Install main extension files
+install_data(extension_sources,
+  install_dir: join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com')
+)
+
+# Install data files
+install_subdir('data',
+  install_dir: join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com')
+)
+
+# Install source files
+install_subdir('src',
+  install_dir: join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com')
+)
+
+# Install metadata
+install_data('metadata.json',
+  install_dir: join_paths(get_option('datadir'), 'gnome-shell/extensions/betterkeys@jomakori.github.com')
 )
 
 # Compile and install GSettings schema
@@ -41,6 +58,3 @@ gnome.compile_schemas(
 install_data(schema_files,
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
 )
-
-# Post-install script to enable the extension
-meson.add_install_script('post_install.sh')

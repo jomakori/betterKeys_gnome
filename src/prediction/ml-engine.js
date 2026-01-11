@@ -41,7 +41,7 @@ class MLEngine extends GObject.Object {
         this._userPatterns = new Map(); // word -> { context, frequency, timestamp }
         this._sessionHistory = [];
 
-        log('[BetterKeys] MLEngine initialized');
+        log('[betterKeys] MLEngine initialized');
     }
 
     /**
@@ -55,7 +55,7 @@ class MLEngine extends GObject.Object {
             );
 
             if (!modelFile.query_exists(null)) {
-                log('[BetterKeys] No ML model found, using statistical fallback');
+                log('[betterKeys] No ML model found, using statistical fallback');
                 this._isModelLoaded = false;
                 return false;
             }
@@ -69,10 +69,10 @@ class MLEngine extends GObject.Object {
             };
 
             this._isModelLoaded = true;
-            log('[BetterKeys] ML model loaded successfully');
+            log('[betterKeys] ML model loaded successfully');
             return true;
         } catch (error) {
-            logError(`[BetterKeys] Failed to load ML model: ${error}`);
+            logError(`[betterKeys] Failed to load ML model: ${error}`);
             this._isModelLoaded = false;
             return false;
         }
@@ -90,7 +90,7 @@ class MLEngine extends GObject.Object {
             this._indexToWord.set(index, word);
         });
 
-        log(`[BetterKeys] ML vocabulary initialized with ${this._vocabularySize} words`);
+        log(`[betterKeys] ML vocabulary initialized with ${this._vocabularySize} words`);
     }
 
     /**
@@ -128,7 +128,7 @@ class MLEngine extends GObject.Object {
 
             return suggestions;
         } catch (error) {
-            logError(`[BetterKeys] ML prediction failed: ${error}`);
+            logError(`[betterKeys] ML prediction failed: ${error}`);
             return this._getStatisticalPredictions(prefix, context, limit);
         }
     }
@@ -156,7 +156,7 @@ class MLEngine extends GObject.Object {
      * @param {Array} features - Input features.
      * @returns {Array} Predictions.
      */
-    _modelPredict(features) {
+    _modelPredict(_features) {
         // Simplified simulation - in real implementation would use TensorFlow.js
         const predictions = [];
 
@@ -233,7 +233,7 @@ class MLEngine extends GObject.Object {
      * @param {string} word - Current word.
      * @returns {Array} Next word probabilities.
      */
-    _getNextWordProbabilities(word) {
+    _getNextWordProbabilities(_word) {
         // Simplified n-gram probabilities
         const probabilities = [];
         const allWords = this._vocabulary.getTopWords(100);
@@ -277,9 +277,9 @@ class MLEngine extends GObject.Object {
                 this._performIncrementalTraining();
             }
 
-            log(`[BetterKeys] ML model trained with ${trainingPairs.length} samples`);
+            log(`[betterKeys] ML model trained with ${trainingPairs.length} samples`);
         } catch (error) {
-            logError(`[BetterKeys] Training failed: ${error}`);
+            logError(`[betterKeys] Training failed: ${error}`);
         }
     }
 
@@ -289,7 +289,7 @@ class MLEngine extends GObject.Object {
     _performIncrementalTraining() {
         // Simplified training simulation
         // In real implementation, this would update neural network weights
-        log(`[BetterKeys] Performing incremental training on ${this._trainingData.length} samples`);
+        log(`[betterKeys] Performing incremental training on ${this._trainingData.length} samples`);
 
         // Clear training data after processing
         this._trainingData = [];
@@ -378,10 +378,10 @@ class MLEngine extends GObject.Object {
     saveModel() {
         try {
             // In real implementation, save neural network weights
-            log('[BetterKeys] ML model saved');
+            log('[betterKeys] ML model saved');
             return true;
         } catch (error) {
-            logError(`[BetterKeys] Failed to save model: ${error}`);
+            logError(`[betterKeys] Failed to save model: ${error}`);
             return false;
         }
     }
@@ -407,7 +407,7 @@ class MLEngine extends GObject.Object {
      */
     updateConfig(config) {
         Object.assign(this._config, config);
-        log('[BetterKeys] ML engine configuration updated');
+        log('[betterKeys] ML engine configuration updated');
     }
 
     /**
@@ -427,7 +427,7 @@ class MLEngine extends GObject.Object {
         this._trainingData = [];
         this._userPatterns.clear();
         this._sessionHistory = [];
-        log('[BetterKeys] ML engine reset');
+        log('[betterKeys] ML engine reset');
     }
 });
 
@@ -436,6 +436,3 @@ MLEngine.signals = {
     'model-updated': { param_types: [GObject.TYPE_POINTER] },
     'learning-complete': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export
-var MLEngine = MLEngine;

@@ -1,7 +1,6 @@
 /* src/keyboard/manager.js - Keyboard lifecycle and state management */
 
-const { GObject, Clutter, Gio, GLib } = imports.gi;
-const Main = imports.ui.main;
+const { GObject, Clutter, GLib } = imports.gi;
 
 /**
  * KeyboardManager handles keyboard lifecycle, layout loading,
@@ -46,7 +45,7 @@ class KeyboardManager extends GObject.Object {
         this._animationFrameId = 0;
         this._lastUpdateTime = 0;
 
-        log('[BetterKeys] KeyboardManager initialized');
+        log('[betterKeys] KeyboardManager initialized');
     }
 
     /**
@@ -62,7 +61,7 @@ class KeyboardManager extends GObject.Object {
             return;
         }
 
-        log('[BetterKeys] Enabling keyboard manager');
+        log('[betterKeys] Enabling keyboard manager');
 
         this._keyboardUI = keyboardUI;
         this._inputHandler = inputHandler;
@@ -84,7 +83,7 @@ class KeyboardManager extends GObject.Object {
         this._startUpdateLoop();
 
         this._isEnabled = true;
-        log('[BetterKeys] Keyboard manager enabled');
+        log('[betterKeys] Keyboard manager enabled');
     }
 
     /**
@@ -95,7 +94,7 @@ class KeyboardManager extends GObject.Object {
             return;
         }
 
-        log('[BetterKeys] Disabling keyboard manager');
+        log('[betterKeys] Disabling keyboard manager');
 
         // Stop update loop
         this._stopUpdateLoop();
@@ -120,7 +119,7 @@ class KeyboardManager extends GObject.Object {
 
         this._isEnabled = false;
         this._isVisible = false;
-        log('[BetterKeys] Keyboard manager disabled');
+        log('[betterKeys] Keyboard manager disabled');
     }
 
     /**
@@ -129,7 +128,7 @@ class KeyboardManager extends GObject.Object {
      */
     _loadLayout(layoutId) {
         if (!this._layoutManager) {
-            logError('[BetterKeys] Layout manager not available');
+            logError('[betterKeys] Layout manager not available');
             return;
         }
 
@@ -144,10 +143,10 @@ class KeyboardManager extends GObject.Object {
                     this._keyboardUI.setLayout(layout);
                 }
 
-                log(`[BetterKeys] Loaded layout: ${layoutId}`);
+                log(`[betterKeys] Loaded layout: ${layoutId}`);
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to load layout ${layoutId}: ${error}`);
+            logError(`[betterKeys] Failed to load layout ${layoutId}: ${error}`);
         }
     }
 
@@ -180,7 +179,7 @@ class KeyboardManager extends GObject.Object {
             this._keyboardWidth = this._keyboardUI.width;
             this._keyboardHeight = this._keyboardUI.height;
 
-            log('[BetterKeys] Keyboard shown');
+            log('[betterKeys] Keyboard shown');
         }
     }
 
@@ -200,7 +199,7 @@ class KeyboardManager extends GObject.Object {
             // Release all pressed keys
             this._releaseAllKeys();
 
-            log('[BetterKeys] Keyboard hidden');
+            log('[betterKeys] Keyboard hidden');
         }
     }
 
@@ -384,14 +383,14 @@ class KeyboardManager extends GObject.Object {
      */
     setDockingMode(mode) {
         if (!['bottom', 'top', 'floating'].includes(mode)) {
-            logError(`[BetterKeys] Invalid docking mode: ${mode}`);
+            logError(`[betterKeys] Invalid docking mode: ${mode}`);
             return;
         }
 
         this._dockingMode = mode;
         this._updateKeyboardPosition();
 
-        log(`[BetterKeys] Docking mode set to ${mode}`);
+        log(`[betterKeys] Docking mode set to ${mode}`);
     }
 
     /**
@@ -434,7 +433,7 @@ class KeyboardManager extends GObject.Object {
                 this._windowTracker.connect('notify::focus-app', this._onFocusAppChanged.bind(this));
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to set up window tracking: ${error}`);
+            logError(`[betterKeys] Failed to set up window tracking: ${error}`);
         }
     }
 
@@ -578,6 +577,3 @@ KeyboardManager.signals = {
     'application-layout-changed': { param_types: [GObject.TYPE_POINTER] },
     'application-layout-removed': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export the KeyboardManager class
-var KeyboardManager = KeyboardManager;

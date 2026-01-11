@@ -1,9 +1,6 @@
 /* src/ui/suggestion-bar.js - Suggestion bar UI for word predictions */
 
-const { GObject, St, Clutter, Pango } = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+const { GObject, St } = imports.gi;
 
 /**
  * SuggestionBar - Displays word suggestions above the keyboard
@@ -46,7 +43,7 @@ class SuggestionBar extends St.BoxLayout {
         // Connect signals
         this._connectSignals();
 
-        log('[BetterKeys] SuggestionBar initialized');
+        log('[betterKeys] SuggestionBar initialized');
     }
 
     /**
@@ -325,7 +322,7 @@ class SuggestionBar extends St.BoxLayout {
         // Animate selection
         this._animateSelection(index);
 
-        log(`[BetterKeys] Suggestion selected: ${suggestion.word}`);
+        log(`[betterKeys] Suggestion selected: ${suggestion.word}`);
     }
 
     /**
@@ -427,7 +424,7 @@ class SuggestionBar extends St.BoxLayout {
     _ensureVisible(index) {
         // Implementation would depend on scrollable container
         // For now, just log
-        log(`[BetterKeys] Ensuring suggestion ${index} is visible`);
+        log(`[betterKeys] Ensuring suggestion ${index} is visible`);
     }
 
     /**
@@ -499,7 +496,7 @@ class SuggestionBar extends St.BoxLayout {
         Object.assign(this._config, config);
         this._updateStyle();
         this._updateUI();
-        log('[BetterKeys] SuggestionBar configuration updated');
+        log('[betterKeys] SuggestionBar configuration updated');
     }
 
     /**
@@ -522,7 +519,7 @@ class SuggestionBar extends St.BoxLayout {
         this._suggestions = [];
 
         super.destroy();
-        log('[BetterKeys] SuggestionBar destroyed');
+        log('[betterKeys] SuggestionBar destroyed');
     }
 });
 
@@ -532,6 +529,3 @@ SuggestionBar.signals = {
     'suggestion-hovered': { param_types: [GObject.TYPE_STRING, GObject.TYPE_INT] },
     'visibility-changed': { param_types: [GObject.TYPE_BOOLEAN] }
 };
-
-// Export
-var SuggestionBar = SuggestionBar;

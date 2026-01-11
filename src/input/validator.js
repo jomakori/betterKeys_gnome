@@ -46,7 +46,7 @@ class InputValidator extends GObject.Object {
             allowUnicode: true
         };
 
-        log('[BetterKeys] InputValidator initialized');
+        log('[betterKeys] InputValidator initialized');
     }
 
     /**
@@ -341,7 +341,7 @@ class InputValidator extends GObject.Object {
         this.emit('security-issue', logEntry);
 
         // Log to console (in production, this would go to a secure log)
-        logError(`[BetterKeys Security] ${message}: ${JSON.stringify(data)}`);
+        logError(`[betterKeys Security] ${message}: ${JSON.stringify(data)}`);
     }
 
     /**
@@ -364,7 +364,7 @@ class InputValidator extends GObject.Object {
      */
     updateConfig(config) {
         Object.assign(this._config, config);
-        log('[BetterKeys] InputValidator configuration updated');
+        log('[betterKeys] InputValidator configuration updated');
     }
 
     /**
@@ -373,7 +373,7 @@ class InputValidator extends GObject.Object {
     reset() {
         this._eventTimestamps = [];
         this._inputHistory = [];
-        log('[BetterKeys] InputValidator reset');
+        log('[betterKeys] InputValidator reset');
     }
 
     /**
@@ -383,7 +383,7 @@ class InputValidator extends GObject.Object {
      */
     addPatternDetector(pattern, description) {
         this._patternDetectors.push({ pattern, description });
-        log(`[BetterKeys] Added pattern detector: ${description}`);
+        log(`[betterKeys] Added pattern detector: ${description}`);
     }
 
     /**
@@ -395,7 +395,7 @@ class InputValidator extends GObject.Object {
             d => d.description !== description
         );
         const removed = initialLength - this._patternDetectors.length;
-        log(`[BetterKeys] Removed ${removed} pattern detector(s)`);
+        log(`[betterKeys] Removed ${removed} pattern detector(s)`);
     }
 });
 
@@ -403,6 +403,3 @@ class InputValidator extends GObject.Object {
 InputValidator.signals = {
     'security-issue': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export the InputValidator class
-var InputValidator = InputValidator;

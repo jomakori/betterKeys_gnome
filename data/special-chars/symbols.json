@@ -1,0 +1,534 @@
+[
+    {
+        "char": "±",
+        "name": "Plus-minus sign",
+        "category": "math",
+        "unicode": "U+00B1",
+        "keywords": ["plus", "minus", "sign", "approximate"]
+    },
+    {
+        "char": "×",
+        "name": "Multiplication sign",
+        "category": "math",
+        "unicode": "U+00D7",
+        "keywords": ["multiply", "times", "cross"]
+    },
+    {
+        "char": "÷",
+        "name": "Division sign",
+        "category": "math",
+        "unicode": "U+00F7",
+        "keywords": ["divide", "obelus"]
+    },
+    {
+        "char": "√",
+        "name": "Square root",
+        "category": "math",
+        "unicode": "U+221A",
+        "keywords": ["root", "radical"]
+    },
+    {
+        "char": "∞",
+        "name": "Infinity",
+        "category": "math",
+        "unicode": "U+221E",
+        "keywords": ["infinity", "forever", "limitless"]
+    },
+    {
+        "char": "≠",
+        "name": "Not equal to",
+        "category": "math",
+        "unicode": "U+2260",
+        "keywords": ["not equal", "inequality"]
+    },
+    {
+        "char": "≈",
+        "name": "Almost equal to",
+        "category": "math",
+        "unicode": "U+2248",
+        "keywords": ["approximately", "almost equal", "approx"]
+    },
+    {
+        "char": "≤",
+        "name": "Less-than or equal to",
+        "category": "math",
+        "unicode": "U+2264",
+        "keywords": ["less than or equal", "inequality"]
+    },
+    {
+        "char": "≥",
+        "name": "Greater-than or equal to",
+        "category": "math",
+        "unicode": "U+2265",
+        "keywords": ["greater than or equal", "inequality"]
+    },
+    {
+        "char": "∑",
+        "name": "N-ary summation",
+        "category": "math",
+        "unicode": "U+2211",
+        "keywords": ["sum", "sigma", "total"]
+    },
+    {
+        "char": "∏",
+        "name": "N-ary product",
+        "category": "math",
+        "unicode": "U+220F",
+        "keywords": ["product", "pi", "multiply"]
+    },
+    {
+        "char": "∫",
+        "name": "Integral",
+        "category": "math",
+        "unicode": "U+222B",
+        "keywords": ["integral", "calculus"]
+    },
+    {
+        "char": "∂",
+        "name": "Partial differential",
+        "category": "math",
+        "unicode": "U+2202",
+        "keywords": ["partial", "derivative", "differential"]
+    },
+    {
+        "char": "∇",
+        "name": "Nabla",
+        "category": "math",
+        "unicode": "U+2207",
+        "keywords": ["nabla", "gradient", "del"]
+    },
+    {
+        "char": "←",
+        "name": "Leftwards arrow",
+        "category": "arrows",
+        "unicode": "U+2190",
+        "keywords": ["left", "arrow", "back"]
+    },
+    {
+        "char": "→",
+        "name": "Rightwards arrow",
+        "category": "arrows",
+        "unicode": "U+2192",
+        "keywords": ["right", "arrow", "forward"]
+    },
+    {
+        "char": "↑",
+        "name": "Upwards arrow",
+        "category": "arrows",
+        "unicode": "U+2191",
+        "keywords": ["up", "arrow", "increase"]
+    },
+    {
+        "char": "↓",
+        "name": "Downwards arrow",
+        "category": "arrows",
+        "unicode": "U+2193",
+        "keywords": ["down", "arrow", "decrease"]
+    },
+    {
+        "char": "↔",
+        "name": "Left right arrow",
+        "category": "arrows",
+        "unicode": "U+2194",
+        "keywords": ["left right", "horizontal", "bidirectional"]
+    },
+    {
+        "char": "↕",
+        "name": "Up down arrow",
+        "category": "arrows",
+        "unicode": "U+2195",
+        "keywords": ["up down", "vertical", "bidirectional"]
+    },
+    {
+        "char": "↖",
+        "name": "North west arrow",
+        "category": "arrows",
+        "unicode": "U+2196",
+        "keywords": ["north west", "diagonal", "corner"]
+    },
+    {
+        "char": "↗",
+        "name": "North east arrow",
+        "category": "arrows",
+        "unicode": "U+2197",
+        "keywords": ["north east", "diagonal", "corner"]
+    },
+    {
+        "char": "↘",
+        "name": "South east arrow",
+        "category": "arrows",
+        "unicode": "U+2198",
+        "keywords": ["south east", "diagonal", "corner"]
+    },
+    {
+        "char": "↙",
+        "name": "South west arrow",
+        "category": "arrows",
+        "unicode": "U+2199",
+        "keywords": ["south west", "diagonal", "corner"]
+    },
+    {
+        "char": "€",
+        "name": "Euro sign",
+        "category": "currency",
+        "unicode": "U+20AC",
+        "keywords": ["euro", "currency", "money"]
+    },
+    {
+        "char": "£",
+        "name": "Pound sign",
+        "category": "currency",
+        "unicode": "U+00A3",
+        "keywords": ["pound", "currency", "money", "sterling"]
+    },
+    {
+        "char": "¥",
+        "name": "Yen sign",
+        "category": "currency",
+        "unicode": "U+00A5",
+        "keywords": ["yen", "currency", "money", "japan"]
+    },
+    {
+        "char": "$",
+        "name": "Dollar sign",
+        "category": "currency",
+        "unicode": "U+0024",
+        "keywords": ["dollar", "currency", "money", "usd"]
+    },
+    {
+        "char": "¢",
+        "name": "Cent sign",
+        "category": "currency",
+        "unicode": "U+00A2",
+        "keywords": ["cent", "currency", "money"]
+    },
+    {
+        "char": "₹",
+        "name": "Indian rupee sign",
+        "category": "currency",
+        "unicode": "U+20B9",
+        "keywords": ["rupee", "currency", "money", "india"]
+    },
+    {
+        "char": "₿",
+        "name": "Bitcoin sign",
+        "category": "currency",
+        "unicode": "U+20BF",
+        "keywords": ["bitcoin", "crypto", "currency", "money"]
+    },
+    {
+        "char": "«",
+        "name": "Left-pointing double angle quotation mark",
+        "category": "punctuation",
+        "unicode": "U+00AB",
+        "keywords": ["left quote", "double angle", "guillemet"]
+    },
+    {
+        "char": "»",
+        "name": "Right-pointing double angle quotation mark",
+        "category": "punctuation",
+        "unicode": "U+00BB",
+        "keywords": ["right quote", "double angle", "guillemet"]
+    },
+    {
+        "char": "“",
+        "name": "Left double quotation mark",
+        "category": "punctuation",
+        "unicode": "U+201C",
+        "keywords": ["left double quote", "quotation"]
+    },
+    {
+        "char": "”",
+        "name": "Right double quotation mark",
+        "category": "punctuation",
+        "unicode": "U+201D",
+        "keywords": ["right double quote", "quotation"]
+    },
+    {
+        "char": "‘",
+        "name": "Left single quotation mark",
+        "category": "punctuation",
+        "unicode": "U+2018",
+        "keywords": ["left single quote", "apostrophe"]
+    },
+    {
+        "char": "’",
+        "name": "Right single quotation mark",
+        "category": "punctuation",
+        "unicode": "U+2019",
+        "keywords": ["right single quote", "apostrophe"]
+    },
+    {
+        "char": "…",
+        "name": "Horizontal ellipsis",
+        "category": "punctuation",
+        "unicode": "U+2026",
+        "keywords": ["ellipsis", "dots", "continue"]
+    },
+    {
+        "char": "—",
+        "name": "Em dash",
+        "category": "punctuation",
+        "unicode": "U+2014",
+        "keywords": ["em dash", "long dash", "break"]
+    },
+    {
+        "char": "–",
+        "name": "En dash",
+        "category": "punctuation",
+        "unicode": "U+2013",
+        "keywords": ["en dash", "dash", "range"]
+    },
+    {
+        "char": "©",
+        "name": "Copyright sign",
+        "category": "technical",
+        "unicode": "U+00A9",
+        "keywords": ["copyright", "legal", "symbol"]
+    },
+    {
+        "char": "®",
+        "name": "Registered sign",
+        "category": "technical",
+        "unicode": "U+00AE",
+        "keywords": ["registered", "trademark", "legal"]
+    },
+    {
+        "char": "™",
+        "name": "Trade mark sign",
+        "category": "technical",
+        "unicode": "U+2122",
+        "keywords": ["trademark", "brand", "legal"]
+    },
+    {
+        "char": "℠",
+        "name": "Service mark",
+        "category": "technical",
+        "unicode": "U+2120",
+        "keywords": ["service mark", "legal"]
+    },
+    {
+        "char": "℗",
+        "name": "Sound recording copyright",
+        "category": "technical",
+        "unicode": "U+2117",
+        "keywords": ["phonogram", "copyright", "sound"]
+    },
+    {
+        "char": "§",
+        "name": "Section sign",
+        "category": "technical",
+        "unicode": "U+00A7",
+        "keywords": ["section", "legal", "paragraph"]
+    },
+    {
+        "char": "¶",
+        "name": "Pilcrow sign",
+        "category": "technical",
+        "unicode": "U+00B6",
+        "keywords": ["pilcrow", "paragraph", "mark"]
+    },
+    {
+        "char": "†",
+        "name": "Dagger",
+        "category": "technical",
+        "unicode": "U+2020",
+        "keywords": ["dagger", "footnote", "reference"]
+    },
+    {
+        "char": "‡",
+        "name": "Double dagger",
+        "category": "technical",
+        "unicode": "U+2021",
+        "keywords": ["double dagger", "footnote", "reference"]
+    },
+    {
+        "char": "■",
+        "name": "Black square",
+        "category": "shapes",
+        "unicode": "U+25A0",
+        "keywords": ["square", "black", "shape", "block"]
+    },
+    {
+        "char": "□",
+        "name": "White square",
+        "category": "shapes",
+        "unicode": "U+25A1",
+        "keywords": ["square", "white", "shape", "outline"]
+    },
+    {
+        "char": "●",
+        "name": "Black circle",
+        "category": "shapes",
+        "unicode": "U+25CF",
+        "keywords": ["circle", "black", "dot", "bullet"]
+    },
+    {
+        "char": "○",
+        "name": "White circle",
+        "category": "shapes",
+        "unicode": "U+25CB",
+        "keywords": ["circle", "white", "outline"]
+    },
+    {
+        "char": "▲",
+        "name": "Black up-pointing triangle",
+        "category": "shapes",
+        "unicode": "U+25B2",
+        "keywords": ["triangle", "black", "up", "shape"]
+    },
+    {
+        "char": "△",
+        "name": "White up-pointing triangle",
+        "category": "shapes",
+        "unicode": "U+25B3",
+        "keywords": ["triangle", "white", "up", "shape"]
+    },
+    {
+        "char": "▼",
+        "name": "Black down-pointing triangle",
+        "category": "shapes",
+        "unicode": "U+25BC",
+        "keywords": ["triangle", "black", "down", "shape"]
+    },
+    {
+        "char": "▽",
+        "name": "White down-pointing triangle",
+        "category": "shapes",
+        "unicode": "U+25BD",
+        "keywords": ["triangle", "white", "down", "shape"]
+    },
+    {
+        "char": "★",
+        "name": "Black star",
+        "category": "shapes",
+        "unicode": "U+2605",
+        "keywords": ["star", "black", "favorite", "rating"]
+    },
+    {
+        "char": "☆",
+        "name": "White star",
+        "category": "shapes",
+        "unicode": "U+2606",
+        "keywords": ["star", "white", "outline", "rating"]
+    },
+    {
+        "char": "♠",
+        "name": "Black spade suit",
+        "category": "misc",
+        "unicode": "U+2660",
+        "keywords": ["spade", "card", "suit", "game"]
+    },
+    {
+        "char": "♣",
+        "name": "Black club suit",
+        "category": "misc",
+        "unicode": "U+2663",
+        "keywords": ["club", "card", "suit", "game"]
+    },
+    {
+        "char": "♥",
+        "name": "Black heart suit",
+        "category": "misc",
+        "unicode": "U+2665",
+        "keywords": ["heart", "card", "suit", "love"]
+    },
+    {
+        "char": "♦",
+        "name": "Black diamond suit",
+        "category": "misc",
+        "unicode": "U+2666",
+        "keywords": ["diamond", "card", "suit", "game"]
+    },
+    {
+        "char": "♪",
+        "name": "Eighth note",
+        "category": "misc",
+        "unicode": "U+266A",
+        "keywords": ["music", "note", "eighth", "sound"]
+    },
+    {
+        "char": "♫",
+        "name": "Beamed eighth notes",
+        "category": "misc",
+        "unicode": "U+266B",
+        "keywords": ["music", "notes", "beamed", "sound"]
+    },
+    {
+        "char": "☀",
+        "name": "Black sun with rays",
+        "category": "misc",
+        "unicode": "U+2600",
+        "keywords": ["sun", "weather", "day", "light"]
+    },
+    {
+        "char": "☁",
+        "name": "Cloud",
+        "category": "misc",
+        "unicode": "U+2601",
+        "keywords": ["cloud", "weather", "sky"]
+    },
+    {
+        "char": "☂",
+        "name": "Umbrella",
+        "category": "misc",
+        "unicode": "U+2602",
+        "keywords": ["umbrella", "rain", "weather"]
+    },
+    {
+        "char": "☎",
+        "name": "Black telephone",
+        "category": "misc",
+        "unicode": "U+260E",
+        "keywords": ["telephone", "phone", "call"]
+    },
+    {
+        "char": "✂",
+        "name": "Black scissors",
+        "category": "misc",
+        "unicode": "U+2702",
+        "keywords": ["scissors", "cut", "tool"]
+    },
+    {
+        "char": "✉",
+        "name": "Envelope",
+        "category": "misc",
+        "unicode": "U+2709",
+        "keywords": ["envelope", "mail", "letter", "email"]
+    },
+    {
+        "char": "✓",
+        "name": "Check mark",
+        "category": "misc",
+        "unicode": "U+2713",
+        "keywords": ["check", "tick", "correct", "done"]
+    },
+    {
+        "char": "✗",
+        "name": "Ballot X",
+        "category": "misc",
+        "unicode": "U+2717",
+        "keywords": ["x", "cross", "wrong", "cancel"]
+    },
+    {
+        "char": "✶",
+        "name": "Six pointed black star",
+        "category": "misc",
+        "unicode": "U+2736",
+        "keywords": ["star", "six pointed", "shape"]
+    },
+    {
+        "char": "❖",
+        "name": "Black diamond minus white X",
+        "category": "misc",
+        "unicode": "U+2756",
+        "keywords": ["diamond", "x", "shape"]
+    },
+    {
+        "char": "❤",
+        "name": "Heavy black heart",
+        "category": "misc",
+        "unicode": "U+2764",
+        "keywords": ["heart", "love", "red"]
+    }
+]

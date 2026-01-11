@@ -1,0 +1,16 @@
+node_modules/
+coverage/
+lcov-report/
+build/
+.DS_Store
+.env
+*.log
+*.tmp
+*.swp
+.idea/
+.vscode/
+*.bak
+npm-debug.log
+dist/
+*.tsbuildinfo
+betterkeys@jomakori.github.com.shell-extension

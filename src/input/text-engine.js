@@ -1,6 +1,6 @@
 /* src/input/text-engine.js - Text input engine for character insertion, editing, clipboard, undo/redo */
 
-const { GObject, Gio, GLib, IBus } = imports.gi;
+const { GObject } = imports.gi;
 
 // Import prediction modules
 const Predictor = imports.src.prediction.predictor;
@@ -53,7 +53,7 @@ class TextEngine extends GObject.Object {
         // Initialize prediction components
         this._initPrediction();
 
-        log('[BetterKeys] TextEngine initialized with prediction');
+        log('[betterKeys] TextEngine initialized with prediction');
     }
 
     /**
@@ -65,16 +65,16 @@ class TextEngine extends GObject.Object {
             this._ibus = IBus.Bus.new();
             if (this._ibus) {
                 this._ibus.connect('connected', () => {
-                    log('[BetterKeys] IBus connected');
+                    log('[betterKeys] IBus connected');
                 });
                 this._ibus.connect('disconnected', () => {
-                    log('[BetterKeys] IBus disconnected');
+                    log('[betterKeys] IBus disconnected');
                 });
             } else {
-                log('[BetterKeys] IBus not available, using simulated input');
+                log('[betterKeys] IBus not available, using simulated input');
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to initialize IBus: ${error}`);
+            logError(`[betterKeys] Failed to initialize IBus: ${error}`);
             this._ibus = null;
         }
     }
@@ -86,7 +86,7 @@ class TextEngine extends GObject.Object {
         try {
             this._clipboard = Gtk.Clipboard.get_default(Gdk.Display.get_default());
         } catch (error) {
-            logError(`[BetterKeys] Failed to initialize clipboard: ${error}`);
+            logError(`[betterKeys] Failed to initialize clipboard: ${error}`);
             this._clipboard = null;
         }
     }
@@ -99,22 +99,22 @@ class TextEngine extends GObject.Object {
             // Load vocabulary
             this._vocabulary = new Vocabulary.VocabularyManager();
             this._vocabulary.loadDefault();
-            
+
             // Initialize predictor
             this._predictor = new Predictor.Predictor(this._vocabulary);
-            
+
             // Initialize ML engine (optional)
             try {
                 this._mlEngine = new MLEngine.MLEngine();
                 this._mlEngine.loadDefaultModel();
             } catch (error) {
-                log(`[BetterKeys] ML engine not available: ${error}`);
+                log(`[betterKeys] ML engine not available: ${error}`);
                 this._mlEngine = null;
             }
-            
-            log('[BetterKeys] Prediction components initialized');
+
+            log('[betterKeys] Prediction components initialized');
         } catch (error) {
-            logError(`[BetterKeys] Failed to initialize prediction: ${error}`);
+            logError(`[betterKeys] Failed to initialize prediction: ${error}`);
             this._predictionEnabled = false;
         }
     }
@@ -157,23 +157,23 @@ class TextEngine extends GObject.Object {
     _updateCurrentWord() {
         const text = this._textBuffer;
         const pos = this._cursorPosition;
-        
+
         // Find start of current word
         let start = pos - 1;
         while (start >= 0 && !this._isWordSeparator(text.charAt(start))) {
             start--;
         }
         start++;
-        
+
         // Find end of current word
         let end = pos;
         while (end < text.length && !this._isWordSeparator(text.charAt(end))) {
             end++;
         }
-        
+
         this._lastWordStart = start;
         this._currentWord = text.substring(start, end);
-        
+
         return this._currentWord;
     }
 
@@ -184,8 +184,8 @@ class TextEngine extends GObject.Object {
     _isWordSeparator(char) {
         return char === ' ' || char === '\n' || char === '\t' || char === '.' ||
                char === ',' || char === '!' || char === '?' || char === ';' ||
-               char === ':' || char === '(' || char === ')' || char === '"' ||
-               char === "'" || char === '';
+               char === ':' || char === '(' || char === ')' || char === '\'' ||
+               char === '"' || char === '';
     }
 
     /**
@@ -199,18 +199,16 @@ class TextEngine extends GObject.Object {
 
         const currentWord = this._updateCurrentWord();
         const context = this._getContextWords();
-        
-        let suggestions = [];
-        
+
         // Get predictions from statistical model
-        suggestions = this._predictor.predict(currentWord, context, 5);
-        
+        let suggestions = this._predictor.predict(currentWord, context, 5);
+
         // If ML engine is available, get ML predictions and merge
         if (this._mlEngine) {
             const mlSuggestions = this._mlEngine.predict(currentWord, context, 3);
             suggestions = this._mergeSuggestions(suggestions, mlSuggestions);
         }
-        
+
         // Apply autocorrect if enabled and word seems misspelled
         if (this._autocorrectEnabled && currentWord.length > 0) {
             const correction = this._predictor.autocorrect(currentWord);
@@ -223,7 +221,7 @@ class TextEngine extends GObject.Object {
                 });
             }
         }
-        
+
         return suggestions.slice(0, 5); // Limit to 5 suggestions
     }
 
@@ -234,9 +232,9 @@ class TextEngine extends GObject.Object {
     _getContextWords() {
         const text = this._textBuffer;
         const pos = this._lastWordStart;
-        
+
         if (pos <= 0) return [];
-        
+
         // Extract last 3 words before current word
         const beforeText = text.substring(0, pos);
         const words = beforeText.split(/[\s\n\t.,!?;:()"']+/).filter(w => w.length > 0);
@@ -250,14 +248,14 @@ class TextEngine extends GObject.Object {
     _mergeSuggestions(statSuggestions, mlSuggestions) {
         const merged = [...statSuggestions];
         const seen = new Set(statSuggestions.map(s => s.text));
-        
+
         for (const mlSuggestion of mlSuggestions) {
             if (!seen.has(mlSuggestion.text)) {
                 merged.push(mlSuggestion);
                 seen.add(mlSuggestion.text);
             }
         }
-        
+
         // Sort by confidence
         merged.sort((a, b) => (b.confidence || 0) - (a.confidence || 0));
         return merged;
@@ -270,7 +268,7 @@ class TextEngine extends GObject.Object {
         if (!this._suggestionBar || !this._predictionEnabled) {
             return;
         }
-        
+
         const suggestions = this.getSuggestions();
         this._suggestionBar.setSuggestions(suggestions);
     }
@@ -283,48 +281,48 @@ class TextEngine extends GObject.Object {
         if (!suggestion || !suggestion.text || this._lastWordStart < 0) {
             return;
         }
-        
+
         const currentWord = this._currentWord;
         const newWord = suggestion.text;
-        
+
         if (currentWord === newWord) {
             return; // No change needed
         }
-        
+
         // Record undo state before replacement
         this._recordUndoState();
-        
+
         // Calculate end position of current word
         const endPos = this._lastWordStart + currentWord.length;
-        
+
         // Replace the word in buffer
         this._textBuffer = this._textBuffer.substring(0, this._lastWordStart) +
                           newWord +
                           this._textBuffer.substring(endPos);
-        
+
         // Update cursor position
         const lengthDiff = newWord.length - currentWord.length;
         this._cursorPosition = endPos + lengthDiff;
-        
+
         // Send the replacement via IBus
         // First delete the old word, then insert new word
         for (let i = 0; i < currentWord.length; i++) {
             this._sendBackspace();
         }
         this._sendKeySequence(newWord);
-        
+
         // Update vocabulary with user selection
         if (this._vocabulary && suggestion.type !== 'autocorrect') {
             this._vocabulary.addUserWord(newWord);
         }
-        
+
         // Clear suggestions
         if (this._suggestionBar) {
             this._suggestionBar.clearSuggestions();
         }
-        
+
         this.emit('suggestion-applied', { oldWord: currentWord, newWord: suggestion.text });
-        log(`[BetterKeys] Applied suggestion: "${currentWord}" -> "${newWord}"`);
+        log(`[betterKeys] Applied suggestion: "${currentWord}" -> "${newWord}"`);
     }
 
     /**
@@ -340,10 +338,10 @@ class TextEngine extends GObject.Object {
                 this.applySuggestion({ text: correction, type: 'autocorrect' });
             }
         }
-        
+
         // Insert space
         this.insertText(' ');
-        
+
         // Update predictions for next word
         this.updateSuggestions();
     }
@@ -379,7 +377,7 @@ class TextEngine extends GObject.Object {
         this.updateSuggestions();
 
         this.emit('text-inserted', text);
-        log(`[BetterKeys] Inserted text: "${text}" at position ${this._cursorPosition}`);
+        log(`[betterKeys] Inserted text: "${text}" at position ${this._cursorPosition}`);
     }
 
     /**
@@ -413,7 +411,7 @@ class TextEngine extends GObject.Object {
         this.updateSuggestions();
 
         this.emit('text-deleted', { direction: 'backward', character: deletedChar });
-        log('[BetterKeys] Backspace pressed');
+        log('[betterKeys] Backspace pressed');
     }
 
     /**
@@ -444,7 +442,7 @@ class TextEngine extends GObject.Object {
         this.updateSuggestions();
 
         this.emit('text-deleted', { direction: 'forward', character: deletedChar });
-        log('[BetterKeys] Delete pressed');
+        log('[betterKeys] Delete pressed');
     }
 
     /**
@@ -470,7 +468,7 @@ class TextEngine extends GObject.Object {
         }
 
         this.emit('selection-deleted', deletedText);
-        log(`[BetterKeys] Deleted selection: "${deletedText}"`);
+        log(`[betterKeys] Deleted selection: "${deletedText}"`);
     }
 
     /**
@@ -481,16 +479,12 @@ class TextEngine extends GObject.Object {
         this.insertText('\n');
         this._sendEnter();
         this.emit('newline-inserted');
-        log('[BetterKeys] Newline inserted');
+        log('[betterKeys] Newline inserted');
     }
 
     /**
      * Insert a space character.
      */
-    insertSpace() {
-        this.insertText(' ');
-    }
-
     /**
      * Move cursor left.
      * @param {boolean} extendSelection - Whether to extend selection.
@@ -546,13 +540,13 @@ class TextEngine extends GObject.Object {
         }
 
         this._cursorPosition = newPosition;
-        
+
         // Update predictions when cursor moves (if not selecting)
         if (!extendSelection) {
             this._updateCurrentWord();
             this.updateSuggestions();
         }
-        
+
         this.emit('cursor-moved', this._cursorPosition);
     }
 
@@ -565,7 +559,7 @@ class TextEngine extends GObject.Object {
         this._hasSelection = true;
         this._cursorPosition = this._textBuffer.length;
         this.emit('selection-changed', { start: 0, end: this._textBuffer.length });
-        log('[BetterKeys] Selected all text');
+        log('[betterKeys] Selected all text');
     }
 
     /**
@@ -582,7 +576,7 @@ class TextEngine extends GObject.Object {
 
         this._clipboard.set_text(text, -1);
         this.emit('copied', text);
-        log(`[BetterKeys] Copied to clipboard: "${text}"`);
+        log(`[betterKeys] Copied to clipboard: "${text}"`);
     }
 
     /**
@@ -596,7 +590,7 @@ class TextEngine extends GObject.Object {
         this.copy();
         this._deleteSelection();
         this.emit('cut');
-        log('[BetterKeys] Cut selection');
+        log('[betterKeys] Cut selection');
     }
 
     /**
@@ -611,7 +605,7 @@ class TextEngine extends GObject.Object {
             if (text) {
                 this.insertText(text);
                 this.emit('pasted', text);
-                log(`[BetterKeys] Pasted from clipboard: "${text}"`);
+                log(`[betterKeys] Pasted from clipboard: "${text}"`);
             }
         });
     }
@@ -629,7 +623,7 @@ class TextEngine extends GObject.Object {
 
         this._restoreState(state);
         this.emit('undo', state);
-        log('[BetterKeys] Undo performed');
+        log('[betterKeys] Undo performed');
     }
 
     /**
@@ -645,7 +639,7 @@ class TextEngine extends GObject.Object {
 
         this._restoreState(state);
         this.emit('redo', state);
-        log('[BetterKeys] Redo performed');
+        log('[betterKeys] Redo performed');
     }
 
     /**
@@ -705,7 +699,7 @@ class TextEngine extends GObject.Object {
                 this._ibus.process_key_event(char.charCodeAt(0), 0, 0);
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to send key sequence: ${error}`);
+            logError(`[betterKeys] Failed to send key sequence: ${error}`);
         }
     }
 
@@ -721,7 +715,7 @@ class TextEngine extends GObject.Object {
             // Backspace key code (0xFF08)
             this._ibus.process_key_event(0xFF08, 0, 0);
         } catch (error) {
-            logError(`[BetterKeys] Failed to send backspace: ${error}`);
+            logError(`[betterKeys] Failed to send backspace: ${error}`);
         }
     }
 
@@ -737,7 +731,7 @@ class TextEngine extends GObject.Object {
             // Delete key code (0xFFFF)
             this._ibus.process_key_event(0xFFFF, 0, 0);
         } catch (error) {
-            logError(`[BetterKeys] Failed to send delete: ${error}`);
+            logError(`[betterKeys] Failed to send delete: ${error}`);
         }
     }
 
@@ -753,7 +747,7 @@ class TextEngine extends GObject.Object {
             // Enter key code (0xFF0D)
             this._ibus.process_key_event(0xFF0D, 0, 0);
         } catch (error) {
-            logError(`[BetterKeys] Failed to send enter: ${error}`);
+            logError(`[betterKeys] Failed to send enter: ${error}`);
         }
     }
 
@@ -796,7 +790,7 @@ class TextEngine extends GObject.Object {
         this._cursorPosition = 0;
         this._hasSelection = false;
         this.emit('cleared');
-        log('[BetterKeys] Text buffer cleared');
+        log('[betterKeys] Text buffer cleared');
     }
 });
 
@@ -816,6 +810,3 @@ TextEngine.signals = {
     'cleared': { param_types: [] },
     'suggestion-applied': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export the TextEngine class
-var TextEngine = TextEngine;

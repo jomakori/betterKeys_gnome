@@ -1,6 +1,6 @@
 /* src/prediction/predictor.js - Predictive text engine with word suggestions */
 
-const { GObject, Gio, GLib } = imports.gi;
+const { GObject } = imports.gi;
 
 /**
  * Predictor - Provides word predictions and suggestions based on context
@@ -37,7 +37,7 @@ class Predictor extends GObject.Object {
         // User vocabulary tracking
         this._userFrequency = new Map(); // word -> frequency count
 
-        log('[BetterKeys] Predictor initialized');
+        log('[betterKeys] Predictor initialized');
     }
 
     /**
@@ -304,7 +304,7 @@ class Predictor extends GObject.Object {
     clearContext() {
         this._contextHistory = [];
         this._predictionCache.clear();
-        log('[BetterKeys] Prediction context cleared');
+        log('[betterKeys] Prediction context cleared');
     }
 
     /**
@@ -328,7 +328,7 @@ class Predictor extends GObject.Object {
     updateConfig(config) {
         Object.assign(this._config, config);
         this._predictionCache.clear();
-        log('[BetterKeys] Predictor configuration updated');
+        log('[betterKeys] Predictor configuration updated');
     }
 
     /**
@@ -345,6 +345,3 @@ Predictor.signals = {
     'suggestion-updated': { param_types: [GObject.TYPE_POINTER] },
     'context-changed': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export
-var Predictor = Predictor;

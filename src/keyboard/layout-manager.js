@@ -1,6 +1,6 @@
 /* src/keyboard/layout-manager.js - Keyboard layout loading, validation, and management with advanced features */
 
-const { GObject, Gio, GLib } = imports.gi;
+const { GObject, Gio } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
@@ -34,7 +34,7 @@ class LayoutManager extends GObject.Object {
         // Load all layouts on initialization
         this._loadAllLayouts();
 
-        log('[BetterKeys] LayoutManager initialized with advanced features');
+        log('[betterKeys] LayoutManager initialized with advanced features');
     }
 
     /**
@@ -42,7 +42,7 @@ class LayoutManager extends GObject.Object {
      */
     _loadAllLayouts() {
         if (!this._layoutDirectory.query_exists(null)) {
-            logError('[BetterKeys] Layouts directory does not exist');
+            logError('[betterKeys] Layouts directory does not exist');
             return;
         }
 
@@ -62,9 +62,9 @@ class LayoutManager extends GObject.Object {
             }
 
             enumerator.close(null);
-            log(`[BetterKeys] Loaded ${this._layouts.size} layout(s)`);
+            log(`[betterKeys] Loaded ${this._layouts.size} layout(s)`);
         } catch (error) {
-            logError(`[BetterKeys] Failed to enumerate layout files: ${error}`);
+            logError(`[betterKeys] Failed to enumerate layout files: ${error}`);
         }
     }
 
@@ -87,12 +87,12 @@ class LayoutManager extends GObject.Object {
             if (this._validateLayout(layout)) {
                 const layoutId = layout.id;
                 this._layouts.set(layoutId, layout);
-                log(`[BetterKeys] Loaded layout: ${layoutId}`);
+                log(`[betterKeys] Loaded layout: ${layoutId}`);
             } else {
-                logError(`[BetterKeys] Invalid layout in file ${fileName}`);
+                logError(`[betterKeys] Invalid layout in file ${fileName}`);
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to load layout file ${fileName}: ${error}`);
+            logError(`[betterKeys] Failed to load layout file ${fileName}: ${error}`);
         }
     }
 
@@ -104,15 +104,15 @@ class LayoutManager extends GObject.Object {
     _validateLayout(layout) {
         // Required fields
         if (!layout.id || typeof layout.id !== 'string') {
-            logError('[BetterKeys] Layout missing or invalid id');
+            logError('[betterKeys] Layout missing or invalid id');
             return false;
         }
         if (!layout.name || typeof layout.name !== 'string') {
-            logError('[BetterKeys] Layout missing or invalid name');
+            logError('[betterKeys] Layout missing or invalid name');
             return false;
         }
         if (!layout.rows || !Array.isArray(layout.rows)) {
-            logError('[BetterKeys] Layout missing or invalid rows');
+            logError('[betterKeys] Layout missing or invalid rows');
             return false;
         }
 
@@ -120,13 +120,13 @@ class LayoutManager extends GObject.Object {
         for (let i = 0; i < layout.rows.length; i++) {
             const row = layout.rows[i];
             if (!row.keys || !Array.isArray(row.keys)) {
-                logError(`[BetterKeys] Row ${i} missing keys array`);
+                logError(`[betterKeys] Row ${i} missing keys array`);
                 return false;
             }
             // Each key must be a string
             for (const key of row.keys) {
                 if (typeof key !== 'string') {
-                    logError(`[BetterKeys] Row ${i} contains non‑string key`);
+                    logError(`[betterKeys] Row ${i} contains non‑string key`);
                     return false;
                 }
             }
@@ -134,19 +134,19 @@ class LayoutManager extends GObject.Object {
 
         // Optional fields with defaults
         if (layout.keyWidth && typeof layout.keyWidth !== 'number') {
-            logError('[BetterKeys] keyWidth must be a number');
+            logError('[betterKeys] keyWidth must be a number');
             return false;
         }
         if (layout.keyHeight && typeof layout.keyHeight !== 'number') {
-            logError('[BetterKeys] keyHeight must be a number');
+            logError('[betterKeys] keyHeight must be a number');
             return false;
         }
         if (layout.spacing && typeof layout.spacing !== 'number') {
-            logError('[BetterKeys] spacing must be a number');
+            logError('[betterKeys] spacing must be a number');
             return false;
         }
         if (layout.type && !this._supportedTypes.includes(layout.type)) {
-            logError(`[BetterKeys] Unsupported layout type: ${layout.type}`);
+            logError(`[betterKeys] Unsupported layout type: ${layout.type}`);
             return false;
         }
 
@@ -161,7 +161,7 @@ class LayoutManager extends GObject.Object {
     loadLayout(layoutId) {
         // Check cache first
         if (this._layoutCache.has(layoutId)) {
-            log(`[BetterKeys] Returning cached layout: ${layoutId}`);
+            log(`[betterKeys] Returning cached layout: ${layoutId}`);
             return this._layoutCache.get(layoutId);
         }
 
@@ -175,7 +175,7 @@ class LayoutManager extends GObject.Object {
         }
 
         if (!layout) {
-            logError(`[BetterKeys] Layout not found: ${layoutId}`);
+            logError(`[betterKeys] Layout not found: ${layoutId}`);
             return null;
         }
 
@@ -333,7 +333,7 @@ class LayoutManager extends GObject.Object {
         const layout = this.loadLayout(layoutId);
         if (layout) {
             this.emit('layout-switched', layoutId);
-            log(`[BetterKeys] Switched to layout: ${layoutId}`);
+            log(`[betterKeys] Switched to layout: ${layoutId}`);
         }
         return layout;
     }
@@ -357,7 +357,7 @@ class LayoutManager extends GObject.Object {
         }
 
         // Other modifiers could be implemented here
-        log(`[BetterKeys] Modifier ${modifier} not yet supported`);
+        log(`[betterKeys] Modifier ${modifier} not yet supported`);
         return base;
     }
 
@@ -394,7 +394,7 @@ class LayoutManager extends GObject.Object {
      */
     clearCache() {
         this._layoutCache.clear();
-        log('[BetterKeys] Layout cache cleared');
+        log('[betterKeys] Layout cache cleared');
     }
 
     /**
@@ -405,7 +405,7 @@ class LayoutManager extends GObject.Object {
         this._layoutCache.clear();
         this._loadAllLayouts();
         this.emit('layouts-reloaded');
-        log('[BetterKeys] Layouts reloaded');
+        log('[betterKeys] Layouts reloaded');
     }
 
     /**
@@ -514,7 +514,7 @@ class LayoutManager extends GObject.Object {
             '1': '!', '2': '@', '3': '#', '4': '$', '5': '%',
             '6': '^', '7': '&', '8': '*', '9': '(', '0': ')',
             '-': '_', '=': '+', '[': '{', ']': '}', '\\': '|',
-            ';': ':', "'": '"', ',': '<', '.': '>', '/': '?'
+            ';': ':', '\'': '"', ',': '<', '.': '>', '/': '?'
         };
 
         for (const row of symbolLayout.rows) {
@@ -605,7 +605,7 @@ class LayoutManager extends GObject.Object {
         this._layoutCache.delete(layoutData.id); // Clear cache
 
         this.emit('layout-created', layoutData.id);
-        log(`[BetterKeys] Custom layout created: ${layoutData.id}`);
+        log(`[betterKeys] Custom layout created: ${layoutData.id}`);
 
         return this.loadLayout(layoutData.id);
     }
@@ -634,7 +634,7 @@ class LayoutManager extends GObject.Object {
             const layoutData = JSON.parse(json);
             return this.createCustomLayout(layoutData);
         } catch (error) {
-            logError(`[BetterKeys] Failed to import layout: ${error}`);
+            logError(`[betterKeys] Failed to import layout: ${error}`);
             throw error;
         }
     }
@@ -732,7 +732,7 @@ class LayoutManager extends GObject.Object {
      * @param {string} targetVersion - Target version.
      * @returns {Object} Migrated layout.
      */
-    migrateLayout(layout, targetVersion = '1.0') {
+    migrateLayout(layout, _targetVersion = '1.0') {
         const migrated = JSON.parse(JSON.stringify(layout));
 
         // Version 1.0 migration
@@ -760,9 +760,9 @@ class LayoutManager extends GObject.Object {
     setDefaultLayout(layoutId) {
         if (this._layouts.has(layoutId)) {
             this._defaultLayoutId = layoutId;
-            log(`[BetterKeys] Default layout set to: ${layoutId}`);
+            log(`[betterKeys] Default layout set to: ${layoutId}`);
         } else {
-            logError(`[BetterKeys] Cannot set default layout: ${layoutId} not found`);
+            logError(`[betterKeys] Cannot set default layout: ${layoutId} not found`);
         }
     }
 
@@ -790,6 +790,3 @@ LayoutManager.signals = {
     'layout-created': { param_types: [GObject.TYPE_STRING] },
     'layout-imported': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export the LayoutManager class
-var LayoutManager = LayoutManager;

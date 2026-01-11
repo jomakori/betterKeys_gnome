@@ -1,7 +1,6 @@
 /* src/input/handler.js - Input event capture and processing */
 
-const { GObject, Clutter, Gdk, GLib } = imports.gi;
-const Main = imports.ui.main;
+const { GObject, Clutter, GLib } = imports.gi;
 
 /**
  * Input event handler for touch, mouse, and stylus input.
@@ -36,14 +35,14 @@ class InputEventHandler extends GObject.Object {
         // Platform detection
         this._isWayland = GLib.getenv('WAYLAND_DISPLAY') !== null;
 
-        log('[BetterKeys] InputEventHandler initialized');
+        log('[betterKeys] InputEventHandler initialized');
     }
 
     /**
      * Start capturing input events.
      */
     start() {
-        log('[BetterKeys] Starting input event capture');
+        log('[betterKeys] Starting input event capture');
 
         // Connect to stage events for global input
         this._connectStageEvents();
@@ -61,7 +60,7 @@ class InputEventHandler extends GObject.Object {
      * Stop capturing input events and clean up.
      */
     stop() {
-        log('[BetterKeys] Stopping input event capture');
+        log('[betterKeys] Stopping input event capture');
 
         // Disconnect stage events
         this._stageListenerIds.forEach(id => {
@@ -113,7 +112,7 @@ class InputEventHandler extends GObject.Object {
         const stylusId = this._stage.connect('pad-button-press-event', this._onStylusEvent.bind(this));
         this._stageListenerIds.push(stylusId);
 
-        log('[BetterKeys] Stage event listeners connected');
+        log('[betterKeys] Stage event listeners connected');
     }
 
     /**
@@ -293,7 +292,7 @@ class InputEventHandler extends GObject.Object {
     /**
      * Handle keyboard UI enter events.
      */
-    _onKeyboardEnter(actor, event) {
+    _onKeyboardEnter(_actor, _event) {
         this.emit('keyboard-focused', true);
         return Clutter.EVENT_PROPAGATE;
     }
@@ -301,7 +300,7 @@ class InputEventHandler extends GObject.Object {
     /**
      * Handle keyboard UI leave events.
      */
-    _onKeyboardLeave(actor, event) {
+    _onKeyboardLeave(_actor, _event) {
         this.emit('keyboard-focused', false);
         return Clutter.EVENT_PROPAGATE;
     }
@@ -345,7 +344,7 @@ class InputEventHandler extends GObject.Object {
      * @param {number} y - Y coordinate.
      * @returns {string|null} Key label or null.
      */
-    _getKeyAtPosition(x, y) {
+    _getKeyAtPosition(_x, _y) {
         // This is a simplified implementation; the real implementation
         // would need to iterate through keys and check bounds.
         // For now, return null and let the keyboard UI handle it.
@@ -406,6 +405,3 @@ InputEventHandler.signals = {
     'keyboard-focused': { param_types: [GObject.TYPE_BOOLEAN] },
     'keyboard-hover': { param_types: [GObject.TYPE_POINTER] }
 };
-
-// Export the InputEventHandler class
-var InputEventHandler = InputEventHandler;

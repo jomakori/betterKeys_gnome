@@ -1,0 +1,21 @@
+{
+  "testEnvironment": "node",
+  "setupFilesAfterEnv": ["./test/setup.js"],
+  "testMatch": [
+    "**/test/unit/**/*.test.js",
+    "**/test/integration/**/*.test.js",
+    "**/test/compatibility/**/*.test.js",
+    "**/test/accessibility/**/*.test.js",
+    "**/test/security/**/*.test.js"
+  ],
+  "collectCoverage": true,
+  "coverageDirectory": "coverage",
+  "coverageReporters": ["text", "lcov"],
+  "coveragePathIgnorePatterns": [
+    "/node_modules/",
+    "/test/",
+    "/mocks/"
+  ],
+  "verbose": true,
+  "testTimeout": 10000
+}

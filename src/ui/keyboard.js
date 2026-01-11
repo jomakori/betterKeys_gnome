@@ -1,17 +1,15 @@
 /* src/ui/keyboard.js - Main keyboard UI component */
 
-const { GObject, St, Clutter, Gio, Shell, GLib } = imports.gi;
+const { GObject, St, Clutter, GLib } = imports.gi;
 const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
 const Key = Me.imports.src.ui.key.Key;
-const LayoutManager = Me.imports.src.keyboard.layout_manager.LayoutManager;
-const LayoutAdapter = Me.imports.src.keyboard.layout_adapter.LayoutAdapter;
-const SuggestionBar = Me.imports.src.ui['suggestion-bar'].SuggestionBar;
+const LayoutManager = Me.imports.src.keyboard['layout-manager'].LayoutManager;
+const LayoutAdapter = Me.imports.src.keyboard['layout-adapter'].LayoutAdapter;
 
-const BetterKeysKeyboardUI = GObject.registerClass(
-class BetterKeysKeyboardUI extends St.Widget {
+const betterKeysKeyboardUI = GObject.registerClass(
+class betterKeysKeyboardUI extends St.Widget {
     _init(settingsManager) {
         super._init({
             reactive: true,
@@ -22,7 +20,7 @@ class BetterKeysKeyboardUI extends St.Widget {
                 spacing: 4
             })
         });
-        
+
         this._settings = settingsManager;
         this._keys = [];
         this._rows = [];
@@ -38,7 +36,7 @@ class BetterKeysKeyboardUI extends St.Widget {
         this._animationTimeoutId = 0;
         this._keyPressAnimations = new Map();
         this._windowManager = null; // optional window manager
-        
+
         // Layout switching components
         this._layoutManager = new LayoutManager();
         this._layoutAdapter = new LayoutAdapter(this._settings);
@@ -47,31 +45,31 @@ class BetterKeysKeyboardUI extends St.Widget {
         this._layoutHistory = [];
         this._maxLayoutHistory = 5;
         this._layoutTransitionDuration = 300;
-        
+
         // Suggestion bar
         this._suggestionBar = null;
-        
+
         // Load the default layout
         this._loadLayout(this._currentLayout);
-        
+
         // Create the keyboard container
         this._createKeyboard();
-        
+
         // Create drag handle for floating mode
         this._createDragHandle();
-        
+
         // Create layout indicator and switcher
         this._createLayoutUI();
-        
+
         // Apply size settings
         this._applySize();
-        
+
         // Connect to layout adapter events
         this._layoutAdapter.connect('layout-changed', this._onLayoutChanged.bind(this));
-        
-        log('[BetterKeys] KeyboardUI initialized with layout switching');
+
+        log('[betterKeys] KeyboardUI initialized with layout switching');
     }
-    
+
     _createDragHandle() {
         this._dragHandle = new St.Widget({
             reactive: true,
@@ -82,17 +80,17 @@ class BetterKeysKeyboardUI extends St.Widget {
             x_align: Clutter.ActorAlign.CENTER,
             y_align: Clutter.ActorAlign.START
         });
-        
+
         // Connect drag events
         this._dragHandle.connect('button-press-event', this._onDragStart.bind(this));
         this._dragHandle.connect('button-release-event', this._onDragEnd.bind(this));
         this._dragHandle.connect('motion-event', this._onDragMove.bind(this));
-        
+
         // Initially hidden (only shown in floating mode)
         this._dragHandle.hide();
         this.add_child(this._dragHandle);
     }
-    
+
     /**
      * Create layout indicator and switcher UI.
      */
@@ -106,32 +104,32 @@ class BetterKeysKeyboardUI extends St.Widget {
             x_align: Clutter.ActorAlign.START,
             y_align: Clutter.ActorAlign.END
         });
-        
+
         this._layoutIndicator.connect('clicked', this._showLayoutSwitcher.bind(this));
         this._layoutIndicator.connect('enter-event', this._onLayoutIndicatorHover.bind(this));
         this._layoutIndicator.connect('leave-event', this._onLayoutIndicatorLeave.bind(this));
-        
+
         // Initially hidden, will be shown based on settings
         this._layoutIndicator.hide();
         this.add_child(this._layoutIndicator);
-        
+
         // Layout switcher popup menu
         this._layoutSwitcher = new PopupMenu.PopupMenu(this._layoutIndicator, 0.0, 0.0, 0);
         this._layoutSwitcher.connect('open-state-changed', this._onLayoutSwitcherToggle.bind(this));
-        
+
         // Update layout indicator text
         this._updateLayoutIndicator();
     }
-    
+
     /**
      * Update layout indicator with current layout name.
      */
     _updateLayoutIndicator() {
         if (!this._layoutIndicator || !this._layoutDefinition) return;
-        
+
         const layoutName = this._layoutDefinition.name || this._currentLayout;
         this._layoutIndicator.label = layoutName;
-        
+
         // Show or hide based on settings
         const showIndicator = this._settings.getShowLayoutIndicator();
         if (showIndicator && this._isVisible) {
@@ -140,38 +138,38 @@ class BetterKeysKeyboardUI extends St.Widget {
             this._layoutIndicator.hide();
         }
     }
-    
+
     /**
      * Handle layout indicator hover (show preview).
      */
     _onLayoutIndicatorHover() {
         if (!this._settings.getLayoutPreviewOnHover()) return;
-        
+
         // Show a small preview of the layout
         // This could be a tooltip or a temporary overlay
         // For now, we'll just highlight the indicator
         this._layoutIndicator.add_style_class_name('betterkeys-layout-indicator-hover');
     }
-    
+
     /**
      * Handle layout indicator leave.
      */
     _onLayoutIndicatorLeave() {
         this._layoutIndicator.remove_style_class_name('betterkeys-layout-indicator-hover');
     }
-    
+
     /**
      * Show layout switcher popup menu.
      */
     _showLayoutSwitcher() {
         if (!this._layoutSwitcher) return;
-        
+
         // Clear existing menu items
         this._layoutSwitcher.removeAll();
-        
+
         // Get available layouts
         const layouts = this._layoutManager.getAvailableLayouts();
-        
+
         // Add layout items
         layouts.forEach(layout => {
             const item = new PopupMenu.PopupMenuItem(layout.name);
@@ -181,10 +179,10 @@ class BetterKeysKeyboardUI extends St.Widget {
             });
             this._layoutSwitcher.addMenuItem(item);
         });
-        
+
         // Add separator
         this._layoutSwitcher.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
-        
+
         // Add "Layout Settings" item
         const settingsItem = new PopupMenu.PopupMenuItem(_('Layout Settings'));
         settingsItem.connect('activate', () => {
@@ -192,11 +190,11 @@ class BetterKeysKeyboardUI extends St.Widget {
             this._layoutSwitcher.close();
         });
         this._layoutSwitcher.addMenuItem(settingsItem);
-        
+
         // Open the menu
         this._layoutSwitcher.open(true);
     }
-    
+
     /**
      * Handle layout switcher open/close state.
      */
@@ -207,37 +205,37 @@ class BetterKeysKeyboardUI extends St.Widget {
             this._layoutIndicator.remove_style_class_name('betterkeys-layout-indicator-active');
         }
     }
-    
+
     /**
      * Switch to a different layout with smooth transition.
      * @param {string} layoutId - Layout identifier.
      */
     switchLayout(layoutId) {
         if (layoutId === this._currentLayout) return;
-        
-        log(`[BetterKeys] Switching layout from ${this._currentLayout} to ${layoutId}`);
-        
+
+        log(`[betterKeys] Switching layout from ${this._currentLayout} to ${layoutId}`);
+
         // Add to layout history
         this._addToLayoutHistory(this._currentLayout);
-        
+
         // Get layout definition
         const layout = this._layoutManager.getLayout(layoutId);
         if (!layout) {
-            logError(`[BetterKeys] Layout not found: ${layoutId}`);
+            logError(`[betterKeys] Layout not found: ${layoutId}`);
             return;
         }
-        
+
         // Animate layout transition
         this._animateLayoutTransition(layout);
     }
-    
+
     /**
      * Animate layout transition (fade out, change, fade in).
      * @param {Object} newLayout - New layout definition.
      */
     _animateLayoutTransition(newLayout) {
         const duration = this._layoutTransitionDuration;
-        
+
         // Fade out current keyboard
         this.ease({
             opacity: 0,
@@ -246,26 +244,26 @@ class BetterKeysKeyboardUI extends St.Widget {
             onComplete: () => {
                 // Change layout
                 this.setLayout(newLayout);
-                
+
                 // Fade in new keyboard
                 this.ease({
                     opacity: 255,
                     duration: duration / 2,
                     mode: Clutter.AnimationMode.EASE_IN_QUAD
                 });
-                
+
                 // Update current layout
                 this._currentLayout = newLayout.id;
                 this._updateLayoutIndicator();
-                
+
                 // Emit layout changed signal
                 this.emit('layout-changed', newLayout.id);
-                
-                log(`[BetterKeys] Layout transition completed to ${newLayout.id}`);
+
+                log(`[betterKeys] Layout transition completed to ${newLayout.id}`);
             }
         });
     }
-    
+
     /**
      * Add layout to history (for quick access).
      * @param {string} layoutId - Layout identifier.
@@ -273,16 +271,16 @@ class BetterKeysKeyboardUI extends St.Widget {
     _addToLayoutHistory(layoutId) {
         // Remove if already in history
         this._layoutHistory = this._layoutHistory.filter(id => id !== layoutId);
-        
+
         // Add to front
         this._layoutHistory.unshift(layoutId);
-        
+
         // Trim history
         if (this._layoutHistory.length > this._maxLayoutHistory) {
             this._layoutHistory.pop();
         }
     }
-    
+
     /**
      * Get recent layouts for quick switching.
      * @returns {Array} Array of layout IDs.
@@ -290,7 +288,7 @@ class BetterKeysKeyboardUI extends St.Widget {
     getRecentLayouts() {
         return [...this._layoutHistory];
     }
-    
+
     /**
      * Switch to next layout in rotation.
      */
@@ -298,12 +296,12 @@ class BetterKeysKeyboardUI extends St.Widget {
         const layouts = this._layoutManager.getAvailableLayouts();
         const currentIndex = layouts.findIndex(l => l.id === this._currentLayout);
         const nextIndex = (currentIndex + 1) % layouts.length;
-        
+
         if (nextIndex !== currentIndex) {
             this.switchLayout(layouts[nextIndex].id);
         }
     }
-    
+
     /**
      * Switch to previous layout in rotation.
      */
@@ -311,47 +309,47 @@ class BetterKeysKeyboardUI extends St.Widget {
         const layouts = this._layoutManager.getAvailableLayouts();
         const currentIndex = layouts.findIndex(l => l.id === this._currentLayout);
         const prevIndex = (currentIndex - 1 + layouts.length) % layouts.length;
-        
+
         if (prevIndex !== currentIndex) {
             this.switchLayout(layouts[prevIndex].id);
         }
     }
-    
+
     /**
      * Handle layout changed event from layout adapter.
      * @param {LayoutAdapter} adapter - The layout adapter.
      * @param {string} layoutId - New layout ID.
      */
     _onLayoutChanged(adapter, layoutId) {
-        log(`[BetterKeys] Layout adapter requested switch to ${layoutId}`);
+        log(`[betterKeys] Layout adapter requested switch to ${layoutId}`);
         this.switchLayout(layoutId);
     }
-    
+
     /**
      * Open layout settings dialog.
      */
     _openLayoutSettings() {
         // This would open a settings dialog for layout customization
         // For now, just log
-        log('[BetterKeys] Opening layout settings');
+        log('[betterKeys] Opening layout settings');
         // TODO: Implement layout settings UI
     }
-    
+
     _onDragStart(actor, event) {
         if (this._dockingPosition !== 'floating') return Clutter.EVENT_PROPAGATE;
-        
+
         this._isDragging = true;
         [this._dragStartX, this._dragStartY] = event.get_coords();
         this._dragStartX -= this.x;
         this._dragStartY -= this.y;
-        
+
         this.add_style_class_name('betterkeys-keyboard-dragging');
         return Clutter.EVENT_STOP;
     }
-    
+
     _onDragMove(actor, event) {
         if (!this._isDragging) return Clutter.EVENT_PROPAGATE;
-        
+
         let [x, y] = event.get_coords();
         this.set_position(
             Math.max(0, x - this._dragStartX),
@@ -359,24 +357,24 @@ class BetterKeysKeyboardUI extends St.Widget {
         );
         return Clutter.EVENT_STOP;
     }
-    
-    _onDragEnd(actor, event) {
+
+    _onDragEnd(_actor, _event) {
         if (!this._isDragging) return Clutter.EVENT_PROPAGATE;
-        
+
         this._isDragging = false;
         this.remove_style_class_name('betterkeys-keyboard-dragging');
         return Clutter.EVENT_STOP;
     }
-    
+
     _applySize() {
         // Remove existing size classes
         this.remove_style_class_name('betterkeys-size-compact');
         this.remove_style_class_name('betterkeys-size-normal');
         this.remove_style_class_name('betterkeys-size-large');
-        
+
         // Add new size class
         this.add_style_class_name(`betterkeys-size-${this._keyboardSize}`);
-        
+
         // Adjust key sizes if layout definition exists
         if (this._layoutDefinition) {
             let scale = 1.0;
@@ -391,7 +389,7 @@ class BetterKeysKeyboardUI extends St.Widget {
             });
         }
     }
-    
+
     /**
      * Set docking position and update UI accordingly.
      * @param {string} position - One of 'top', 'bottom', 'left', 'right', 'floating'.
@@ -399,12 +397,12 @@ class BetterKeysKeyboardUI extends St.Widget {
     setDockingPosition(position) {
         const validPositions = ['top', 'bottom', 'left', 'right', 'floating'];
         if (!validPositions.includes(position)) {
-            logError(`[BetterKeys] Invalid docking position: ${position}`);
+            logError(`[betterKeys] Invalid docking position: ${position}`);
             return;
         }
-        
+
         this._dockingPosition = position;
-        
+
         // Update drag handle visibility
         if (this._dragHandle) {
             if (position === 'floating') {
@@ -413,12 +411,12 @@ class BetterKeysKeyboardUI extends St.Widget {
                 this._dragHandle.hide();
             }
         }
-        
+
         // Update positioning
         this._updatePosition();
-        log(`[BetterKeys] Docking position set to ${position}`);
+        log(`[betterKeys] Docking position set to ${position}`);
     }
-    
+
     /**
      * Set keyboard size and adjust UI.
      * @param {string} size - One of 'compact', 'normal', 'large'.
@@ -426,13 +424,13 @@ class BetterKeysKeyboardUI extends St.Widget {
     setKeyboardSize(size) {
         const validSizes = ['compact', 'normal', 'large'];
         if (!validSizes.includes(size)) {
-            logError(`[BetterKeys] Invalid keyboard size: ${size}`);
+            logError(`[betterKeys] Invalid keyboard size: ${size}`);
             return;
         }
-        
+
         this._keyboardSize = size;
         this._applySize();
-        log(`[BetterKeys] Keyboard size set to ${size}`);
+        log(`[betterKeys] Keyboard size set to ${size}`);
     }
 
     /**
@@ -441,7 +439,7 @@ class BetterKeysKeyboardUI extends St.Widget {
      */
     setWindowManager(windowManager) {
         this._windowManager = windowManager;
-        log('[BetterKeys] Window manager attached to keyboard UI');
+        log('[betterKeys] Window manager attached to keyboard UI');
     }
 
     /**
@@ -459,26 +457,26 @@ class BetterKeysKeyboardUI extends St.Widget {
             // Hide by default, will be shown when suggestions available
             suggestionBar.hide();
         }
-        log('[BetterKeys] Suggestion bar attached to keyboard UI');
+        log('[betterKeys] Suggestion bar attached to keyboard UI');
     }
-    
+
     _loadLayout(layoutId) {
         // Use LayoutManager to load layout
         try {
             const layout = this._layoutManager.getLayout(layoutId);
             if (layout) {
                 this._layoutDefinition = layout;
-                log(`[BetterKeys] Loaded layout: ${layoutId}`);
+                log(`[betterKeys] Loaded layout: ${layoutId}`);
             } else {
-                logError(`[BetterKeys] Layout not found: ${layoutId}, using default`);
+                logError(`[betterKeys] Layout not found: ${layoutId}, using default`);
                 this._loadDefaultLayout();
             }
         } catch (error) {
-            logError(`[BetterKeys] Failed to load layout ${layoutId}: ${error}`);
+            logError(`[betterKeys] Failed to load layout ${layoutId}: ${error}`);
             this._loadDefaultLayout();
         }
     }
-    
+
     /**
      * Load a default QWERTY layout as fallback.
      */
@@ -497,66 +495,66 @@ class BetterKeysKeyboardUI extends St.Widget {
             spacing: 4
         };
     }
-    
+
     /**
      * Set a new layout definition and recreate the keyboard.
      * @param {Object} layout - Layout object from LayoutManager.
      */
     setLayout(layout) {
         if (!layout || !layout.rows) {
-            logError('[BetterKeys] Invalid layout provided to setLayout');
+            logError('[betterKeys] Invalid layout provided to setLayout');
             return;
         }
-        
+
         this._layoutDefinition = layout;
         this._currentLayout = layout.id;
         this._createKeyboard();
-        log(`[BetterKeys] Keyboard layout changed to ${layout.id}`);
+        log(`[betterKeys] Keyboard layout changed to ${layout.id}`);
     }
-    
+
     _createKeyboard() {
         // Clear any existing keys
         this._keys.forEach(key => key.destroy());
         this._keys = [];
         this._rows = [];
-        
+
         // Remove all children
         this.remove_all_children();
-        
+
         // Create rows
-        this._layoutDefinition.rows.forEach((rowKeys, rowIndex) => {
+        this._layoutDefinition.rows.forEach((rowKeys, _rowIndex) => {
             let row = new St.Widget({
                 layout_manager: new Clutter.BoxLayout({
                     orientation: Clutter.Orientation.HORIZONTAL,
                     spacing: this._layoutDefinition.spacing
                 })
             });
-            
-            rowKeys.forEach((keyLabel, keyIndex) => {
+
+            rowKeys.forEach((keyLabel, _keyIndex) => {
                 let key = new Key(keyLabel, this._layoutDefinition.keyWidth, this._layoutDefinition.keyHeight);
                 key.connect('pressed', this._onKeyPressed.bind(this));
                 row.add_child(key);
                 this._keys.push(key);
             });
-            
+
             this.add_child(row);
             this._rows.push(row);
         });
-        
+
         // Apply theme
         this._applyTheme();
     }
-    
+
     _animateKeyPress(key) {
         // Add animation class
         key.add_style_class_name('betterkeys-key-press-animation');
-        
+
         // Record animation start time
         this._keyPressAnimations.set(key, {
             startTime: Date.now(),
             duration: 200 // ms
         });
-        
+
         // Remove class after duration (fallback if animation loop not running)
         if (this._animationTimeoutId) {
             GLib.source_remove(this._animationTimeoutId);
@@ -568,16 +566,16 @@ class BetterKeysKeyboardUI extends St.Widget {
             return GLib.SOURCE_REMOVE;
         });
     }
-    
+
     _onKeyPressed(key, keyLabel) {
-        log(`[BetterKeys] Key pressed: ${keyLabel}`);
-        
+        log(`[betterKeys] Key pressed: ${keyLabel}`);
+
         // Emit signal for external handling
         this.emit('key-pressed', keyLabel);
-        
+
         // Visual feedback
         this._animateKeyPress(key);
-        
+
         // Handle special keys
         switch (keyLabel) {
             case 'Space':
@@ -599,70 +597,70 @@ class BetterKeysKeyboardUI extends St.Widget {
                 this._sendKey(keyLabel);
                 break;
         }
-        
+
         // Provide haptic feedback if enabled
         if (this._settings.getHapticFeedbackEnabled()) {
             this._provideHapticFeedback();
         }
-        
+
         // Play sound if enabled
         if (this._settings.getKeyPressSoundEnabled()) {
             this._playKeySound();
         }
     }
-    
+
     _sendKey(keyChar) {
         // TODO: Implement IBus integration
-        log(`[BetterKeys] Would send key: ${keyChar}`);
+        log(`[betterKeys] Would send key: ${keyChar}`);
     }
-    
+
     _sendBackspace() {
         // TODO: Implement backspace via IBus
-        log('[BetterKeys] Would send backspace');
+        log('[betterKeys] Would send backspace');
     }
-    
+
     _sendEnter() {
         // TODO: Implement enter via IBus
-        log('[BetterKeys] Would send enter');
+        log('[betterKeys] Would send enter');
     }
-    
+
     _toggleShift() {
-        log('[BetterKeys] Would toggle shift');
+        log('[betterKeys] Would toggle shift');
         // TODO: Implement shift toggle
     }
-    
+
     _switchToSymbols() {
-        log('[BetterKeys] Would switch to symbols');
+        log('[betterKeys] Would switch to symbols');
         // TODO: Implement symbol layout switching
     }
-    
+
     _provideHapticFeedback() {
         // TODO: Implement haptic feedback
-        log('[BetterKeys] Would provide haptic feedback');
+        log('[betterKeys] Would provide haptic feedback');
     }
-    
+
     _playKeySound() {
         // TODO: Implement key press sound
-        log('[BetterKeys] Would play key sound');
+        log('[betterKeys] Would play key sound');
     }
-    
+
     _applyTheme() {
         let themeName = this._settings.getThemeName();
-        
+
         // Remove existing theme classes
         this.remove_style_class_name('betterkeys-theme-default');
         this.remove_style_class_name('betterkeys-theme-dark');
         this.remove_style_class_name('betterkeys-theme-high-contrast');
-        
+
         // Add new theme class
         this.add_style_class_name(`betterkeys-theme-${themeName}`);
-        
+
         // Apply theme to all keys
         this._keys.forEach(key => {
             key.setTheme(themeName);
         });
     }
-    
+
     /**
      * Get the key at the given screen coordinates (relative to keyboard).
      * @param {number} x - X coordinate relative to keyboard top‑left.
@@ -674,7 +672,7 @@ class BetterKeysKeyboardUI extends St.Widget {
             const [keyX, keyY] = key.get_transformed_position();
             const keyWidth = key.width;
             const keyHeight = key.height;
-            
+
             if (x >= keyX && x <= keyX + keyWidth &&
                 y >= keyY && y <= keyY + keyHeight) {
                 return key;
@@ -682,7 +680,7 @@ class BetterKeysKeyboardUI extends St.Widget {
         }
         return null;
     }
-    
+
     /**
      * Get the label of the key at the given coordinates.
      * @param {number} x - X coordinate.
@@ -693,7 +691,7 @@ class BetterKeysKeyboardUI extends St.Widget {
         const key = this.getKeyAtPosition(x, y);
         return key ? key.getLabel() : null;
     }
-    
+
     /**
      * Update keyboard animations (called by animation loop).
      * @param {number} time - Current time in milliseconds.
@@ -707,12 +705,11 @@ class BetterKeysKeyboardUI extends St.Widget {
                 this._keyPressAnimations.delete(key);
             } else {
                 // Update animation progress (could adjust scale, opacity, etc.)
-                const progress = elapsed / animation.duration;
                 // For now, we rely on CSS transitions
             }
         });
     }
-    
+
     /**
      * Show the keyboard with animation.
      */
@@ -720,24 +717,24 @@ class BetterKeysKeyboardUI extends St.Widget {
         if (this._isVisible) {
             return;
         }
-        
+
         // Delegate to window manager if available
         if (this._windowManager) {
             this._windowManager.show();
             this._isVisible = true;
-            log('[BetterKeys] Keyboard shown via window manager');
+            log('[betterKeys] Keyboard shown via window manager');
             return;
         }
-        
+
         // Add to the stage
         Main.uiGroup.add_child(this);
-        
+
         // Update position based on docking
         this._updatePosition();
-        
+
         // Set initial opacity for fade-in
         this.opacity = 0;
-        
+
         // Animate opacity
         this.ease({
             opacity: 255,
@@ -745,11 +742,11 @@ class BetterKeysKeyboardUI extends St.Widget {
             mode: Clutter.AnimationMode.EASE_OUT_QUAD,
             onComplete: () => {
                 this._isVisible = true;
-                log('[BetterKeys] Keyboard shown with animation');
+                log('[betterKeys] Keyboard shown with animation');
             }
         });
     }
-    
+
     /**
      * Hide the keyboard with animation.
      */
@@ -757,15 +754,15 @@ class BetterKeysKeyboardUI extends St.Widget {
         if (!this._isVisible) {
             return;
         }
-        
+
         // Delegate to window manager if available
         if (this._windowManager) {
             this._windowManager.hide();
             this._isVisible = false;
-            log('[BetterKeys] Keyboard hidden via window manager');
+            log('[betterKeys] Keyboard hidden via window manager');
             return;
         }
-        
+
         this.ease({
             opacity: 0,
             duration: 150,
@@ -773,11 +770,11 @@ class BetterKeysKeyboardUI extends St.Widget {
             onComplete: () => {
                 Main.uiGroup.remove_child(this);
                 this._isVisible = false;
-                log('[BetterKeys] Keyboard hidden with animation');
+                log('[betterKeys] Keyboard hidden with animation');
             }
         });
     }
-    
+
     /**
      * Update keyboard position based on docking position and screen size.
      */
@@ -785,12 +782,12 @@ class BetterKeysKeyboardUI extends St.Widget {
         if (!this.get_parent()) {
             return; // Not yet added to stage
         }
-        
+
         let [width, height] = global.stage.get_size();
         let keyboardWidth = this.width;
         let keyboardHeight = this.height;
         let padding = 20;
-        
+
         switch (this._dockingPosition) {
             case 'top':
                 this.set_position(
@@ -828,14 +825,14 @@ class BetterKeysKeyboardUI extends St.Widget {
                 break;
         }
     }
-    
+
     isVisible() {
         return this._isVisible;
     }
-    
+
     onSettingsChanged(key) {
-        log(`[BetterKeys] KeyboardUI received settings change: ${key}`);
-        
+        log(`[betterKeys] KeyboardUI received settings change: ${key}`);
+
         switch (key) {
             case 'theme-name':
                 this._applyTheme();
@@ -860,19 +857,19 @@ class BetterKeysKeyboardUI extends St.Widget {
                 break;
         }
     }
-    
+
     destroy() {
         this.hide();
         super.destroy();
-        log('[BetterKeys] KeyboardUI destroyed');
+        log('[betterKeys] KeyboardUI destroyed');
     }
 });
 
 // Add signals to the class
-BetterKeysKeyboardUI.signals = {
+betterKeysKeyboardUI.signals = {
     'key-pressed': { param_types: [GObject.TYPE_STRING] },
     'layout-changed': { param_types: [GObject.TYPE_STRING] }
 };
 
 // Export the KeyboardUI class
-var KeyboardUI = BetterKeysKeyboardUI;
+var KeyboardUI = betterKeysKeyboardUI;

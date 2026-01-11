@@ -1,33 +1,63 @@
-/* stylesheet.css - CSS styles for BetterKeys Virtual Keyboard */
+/* stylesheet.css - CSS styles for betterKeys Virtual Keyboard with CSS Variables */
 
-/* Base keyboard styles */
+/* ============================================
+   CSS Custom Properties (Theme Variables)
+   ============================================ */
+:root {
+    /* Default light theme variables (fallback) */
+    --betterkeys-bg: #ffffff;
+    --betterkeys-key-bg: #f0f0f0;
+    --betterkeys-key-border: #cccccc;
+    --betterkeys-key-text: #333333;
+    --betterkeys-key-pressed-bg: #d0d0d0;
+    --betterkeys-key-hover-bg: #e0e0e0;
+    --betterkeys-panel-bg: #f8f8f8;
+    --betterkeys-panel-border: #dddddd;
+    --betterkeys-text: #222222;
+    --betterkeys-accent: #007bff;
+    --betterkeys-error: #dc3545;
+    --betterkeys-success: #28a745;
+    --betterkeys-warning: #ffc107;
+    --betterkeys-font-size: 1em;
+    --betterkeys-opacity: 0.95;
+    --betterkeys-border-radius: 12px;
+    --betterkeys-key-border-radius: 8px;
+    --betterkeys-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    --betterkeys-transition: all 0.1s ease;
+}
+
+/* ============================================
+   Base Keyboard Styles
+   ============================================ */
 .betterkeys-keyboard {
-    background-color: rgba(240, 240, 240, 0.95);
-    border-radius: 12px;
+    background-color: rgba(var(--betterkeys-bg-rgb, 240, 240, 240), var(--betterkeys-opacity));
+    border-radius: var(--betterkeys-border-radius);
     border: 1px solid rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    box-shadow: var(--betterkeys-shadow);
     padding: 8px;
+    color: var(--betterkeys-text);
+    font-size: var(--betterkeys-font-size);
 }
 
 /* Key base styles */
 .betterkeys-key {
-    background-color: #ffffff;
-    border-radius: 8px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #333333;
-    font-size: 18px;
+    background-color: var(--betterkeys-key-bg);
+    border-radius: var(--betterkeys-key-border-radius);
+    border: 1px solid var(--betterkeys-key-border);
+    color: var(--betterkeys-key-text);
+    font-size: calc(1em * var(--betterkeys-font-size-scale, 1));
     font-weight: 500;
     margin: 2px;
-    transition: all 0.1s ease;
+    transition: var(--betterkeys-transition);
 }
 
 .betterkeys-key:hover {
-    background-color: #f0f0f0;
+    background-color: var(--betterkeys-key-hover-bg);
 }
 
 .betterkeys-key-pressed {
-    background-color: #4a90e2 !important;
-    color: #ffffff !important;
+    background-color: var(--betterkeys-key-pressed-bg) !important;
+    color: var(--betterkeys-key-text) !important;
     transform: scale(0.95);
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
 }
@@ -38,12 +68,12 @@
 }
 
 .betterkeys-key-enter {
-    background-color: #4a90e2;
+    background-color: var(--betterkeys-accent);
     color: #ffffff;
 }
 
 .betterkeys-key-backspace {
-    background-color: #ff6b6b;
+    background-color: var(--betterkeys-error);
     color: #ffffff;
 }
 
@@ -58,19 +88,12 @@
 }
 
 .betterkeys-key-special {
-    font-size: 14px;
-}
-
-/* Theme: Default */
-.betterkeys-theme-default .betterkeys-key {
-    background-color: #ffffff;
-    color: #333333;
+    font-size: 0.9em;
 }
 
 /* ============================================
    Window & Container Styles
    ============================================ */
-
 .betterkeys-window {
     background-color: transparent;
     border-radius: 16px;
@@ -112,32 +135,35 @@
 /* ============================================
    Keyboard Size Variants
    ============================================ */
-
 .betterkeys-size-compact .betterkeys-key {
-    font-size: 14px;
+    font-size: 0.9em;
     border-radius: 6px;
 }
 
 .betterkeys-size-normal .betterkeys-key {
-    font-size: 18px;
+    font-size: 1em;
     border-radius: 8px;
 }
 
 .betterkeys-size-large .betterkeys-key {
-    font-size: 22px;
+    font-size: 1.1em;
     border-radius: 10px;
+}
+
+.betterkeys-size-extra-large .betterkeys-key {
+    font-size: 1.25em;
+    border-radius: 12px;
 }
 
 /* ============================================
    Key States & Modifiers
    ============================================ */
-
 .betterkeys-key-hover {
-    background-color: #e8e8e8 !important;
+    background-color: var(--betterkeys-key-hover-bg) !important;
 }
 
 .betterkeys-key-held {
-    background-color: #ffcc00 !important;
+    background-color: var(--betterkeys-warning) !important;
     color: #000000 !important;
     box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
 }
@@ -150,15 +176,14 @@
 }
 
 .betterkeys-key-modifier-active {
-    background-color: #4a90e2 !important;
+    background-color: var(--betterkeys-accent) !important;
     color: #ffffff !important;
-    box-shadow: 0 0 8px rgba(74, 144, 226, 0.7);
+    box-shadow: 0 0 8px rgba(var(--betterkeys-accent-rgb, 74, 144, 226), 0.7);
 }
 
 /* ============================================
    Animation Classes
    ============================================ */
-
 .betterkeys-key-press-animation {
     animation: betterkeys-key-press 0.2s ease;
 }
@@ -188,16 +213,118 @@
 /* ============================================
    Icon Styles
    ============================================ */
-
 .betterkeys-key-icon {
     color: inherit;
     icon-size: 24px;
 }
 
 /* ============================================
-   Theme Extensions
+   Panel Styles (Clipboard, Emoji, Special Characters)
    ============================================ */
+.betterkeys-panel {
+    background-color: var(--betterkeys-panel-bg);
+    border: 1px solid var(--betterkeys-panel-border);
+    border-radius: var(--betterkeys-border-radius);
+    box-shadow: var(--betterkeys-shadow);
+    color: var(--betterkeys-text);
+    font-size: var(--betterkeys-font-size);
+    padding: 12px;
+    margin: 8px;
+    max-width: 400px;
+    max-height: 500px;
+    overflow: hidden;
+}
 
+.betterkeys-panel-header {
+    font-weight: bold;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--betterkeys-panel-border);
+    margin-bottom: 12px;
+    color: var(--betterkeys-accent);
+}
+
+.betterkeys-panel-search {
+    background-color: var(--betterkeys-key-bg);
+    border: 1px solid var(--betterkeys-key-border);
+    border-radius: 20px;
+    padding: 8px 12px;
+    margin-bottom: 12px;
+    width: 100%;
+    color: var(--betterkeys-key-text);
+    font-size: 0.95em;
+}
+
+.betterkeys-panel-search:focus {
+    outline: 2px solid var(--betterkeys-accent);
+    outline-offset: 1px;
+}
+
+.betterkeys-panel-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    gap: 8px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+
+.betterkeys-panel-item {
+    background-color: var(--betterkeys-key-bg);
+    border: 1px solid var(--betterkeys-key-border);
+    border-radius: var(--betterkeys-key-border-radius);
+    padding: 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--betterkeys-transition);
+    color: var(--betterkeys-key-text);
+}
+
+.betterkeys-panel-item:hover {
+    background-color: var(--betterkeys-key-hover-bg);
+}
+
+.betterkeys-panel-item:active {
+    background-color: var(--betterkeys-key-pressed-bg);
+}
+
+.betterkeys-panel-item-selected {
+    background-color: var(--betterkeys-accent);
+    color: #ffffff;
+    border-color: var(--betterkeys-accent);
+}
+
+.betterkeys-panel-category-tab {
+    background-color: var(--betterkeys-key-bg);
+    border: 1px solid var(--betterkeys-key-border);
+    border-radius: 20px;
+    padding: 6px 12px;
+    margin-right: 6px;
+    cursor: pointer;
+    font-size: 0.9em;
+    color: var(--betterkeys-key-text);
+}
+
+.betterkeys-panel-category-tab:hover {
+    background-color: var(--betterkeys-key-hover-bg);
+}
+
+.betterkeys-panel-category-tab-active {
+    background-color: var(--betterkeys-accent);
+    color: #ffffff;
+    border-color: var(--betterkeys-accent);
+}
+
+.betterkeys-panel-footer {
+    padding-top: 8px;
+    border-top: 1px solid var(--betterkeys-panel-border);
+    margin-top: 12px;
+    font-size: 0.85em;
+    color: var(--betterkeys-key-text);
+    opacity: 0.8;
+}
+
+/* ============================================
+   Theme Extensions (Backward Compatibility)
+   ============================================ */
 /* Dark theme adjustments */
 .betterkeys-theme-dark .betterkeys-drag-handle {
     background-color: rgba(200, 200, 200, 0.3);
@@ -251,29 +378,38 @@
 /* ============================================
    Responsive Adjustments
    ============================================ */
-
 @media (max-width: 600px) {
     .betterkeys-keyboard {
         border-radius: 8px;
         padding: 6px;
     }
-    
+
     .betterkeys-key {
-        font-size: 16px;
+        font-size: 0.9em;
         margin: 1px;
     }
-    
+
     .betterkeys-key-space {
         min-width: 150px;
+    }
+
+    .betterkeys-panel {
+        max-width: 300px;
+        max-height: 400px;
+        padding: 8px;
+    }
+
+    .betterkeys-panel-grid {
+        grid-template-columns: repeat(auto-fill, minmax(35px, 1fr));
+        gap: 6px;
     }
 }
 
 /* ============================================
    Accessibility Enhancements
    ============================================ */
-
 .betterkeys-key:focus-visible {
-    outline: 3px solid #4a90e2;
+    outline: 3px solid var(--betterkeys-accent);
     outline-offset: 2px;
 }
 
@@ -282,6 +418,7 @@
     outline-offset: 1px;
 }
 
+/* Theme-specific overrides (for backward compatibility) */
 .betterkeys-theme-default .betterkeys-key-enter {
     background-color: #4a90e2;
 }
@@ -344,3 +481,121 @@
     background-color: #ff0000;
     color: #ffffff;
 }
+
+/* ============================================
+   Voice Input Button
+   ============================================ */
+.betterkeys-voice-button {
+    background-color: var(--betterkeys-success);
+    color: #ffffff;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    transition: transform 0.2s ease;
+}
+
+.betterkeys-voice-button:hover {
+    transform: scale(1.05);
+}
+
+.betterkeys-voice-button:active {
+    transform: scale(0.95);
+}
+
+.betterkeys-voice-button-listening {
+    background-color: var(--betterkeys-error);
+    animation: betterkeys-voice-pulse 1.5s infinite;
+}
+
+@keyframes betterkeys-voice-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(var(--betterkeys-error-rgb, 220, 53, 69), 0.7); }
+    70% { box-shadow: 0 0 0 10px rgba(var(--betterkeys-error-rgb, 220, 53, 69), 0); }
+    100% { box-shadow: 0 0 0 0 rgba(var(--betterkeys-error-rgb, 220, 53, 69), 0); }
+}
+
+/* ============================================
+   Accessibility High Contrast Mode
+   ============================================ */
+.betterkeys-accessibility-high-contrast {
+    --betterkeys-bg: #000000;
+    --betterkeys-key-bg: #ffffff;
+    --betterkeys-key-border: #000000;
+    --betterkeys-key-text: #000000;
+    --betterkeys-key-pressed-bg: #cccccc;
+    --betterkeys-key-hover-bg: #eeeeee;
+    --betterkeys-panel-bg: #ffffff;
+    --betterkeys-panel-border: #000000;
+    --betterkeys-text: #000000;
+    --betterkeys-accent: #0000ff;
+    --betterkeys-error: #ff0000;
+    --betterkeys-success: #00ff00;
+    --betterkeys-warning: #ffff00;
+}
+
+/* ============================================
+   Dyslexia-friendly font option
+   ============================================ */
+.betterkeys-dyslexia-friendly {
+    font-family: "OpenDyslexic", "Comic Sans MS", sans-serif;
+    letter-spacing: 0.05em;
+    line-height: 1.6;
+}
+
+/* ============================================
+   Sticky Keys Indicator
+   ============================================ */
+.betterkeys-sticky-key-indicator {
+    background-color: var(--betterkeys-warning);
+    color: #000000;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+/* ============================================
+   Tooltip Styles
+   ============================================ */
+.betterkeys-tooltip {
+    background-color: var(--betterkeys-panel-bg);
+    border: 1px solid var(--betterkeys-panel-border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: var(--betterkeys-text);
+    font-size: 0.9em;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    max-width: 200px;
+    z-index: 1000;
+}
+
+/* ============================================
+   IBus Integration Styles
+   ============================================ */
+.betterkeys-ibus-indicator {
+    background-color: var(--betterkeys-accent);
+    color: #ffffff;
+    border-radius: 50%;
+    width: 16px;
+    height: 16px;
+    font-size: 0.7em;
+    text-align: center;
+    line-height: 16px;
+    margin-left: 4px;
+}
+
+.betterkeys-ibus-preedit {
+    background-color: var(--betterkeys-panel-bg);
+    border: 1px dashed var(--betterkeys-accent);
+    border-radius: 4px;
+    padding: 4px 8px;
+    color: var(--betterkeys-text);
+    font-style: italic;
+}
+
+/* ============================================
+   End of stylesheet
+   ============================================ */

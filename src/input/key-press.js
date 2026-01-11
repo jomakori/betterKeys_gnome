@@ -1,6 +1,6 @@
 /* src/input/key-press.js - Individual key press handling, repeat, feedback */
 
-const { GObject, Clutter, Gio, GLib } = imports.gi;
+const { GObject, GLib } = imports.gi;
 
 /**
  * KeyPressHandler manages individual key press/release logic,
@@ -36,7 +36,7 @@ class KeyPressHandler extends GObject.Object {
         // Initialize feedback systems
         this._initFeedbackSystems();
 
-        log('[BetterKeys] KeyPressHandler initialized');
+        log('[betterKeys] KeyPressHandler initialized');
     }
 
     /**
@@ -48,11 +48,11 @@ class KeyPressHandler extends GObject.Object {
             // This is a placeholder; actual implementation depends on platform
             this._hapticFeedback = {
                 trigger: () => {
-                    log('[BetterKeys] Haptic feedback triggered');
+                    log('[betterKeys] Haptic feedback triggered');
                 }
             };
         } catch (error) {
-            logError(`[BetterKeys] Failed to initialize haptic feedback: ${error}`);
+            logError(`[betterKeys] Failed to initialize haptic feedback: ${error}`);
         }
 
         // Sound feedback (using GStreamer or system sounds)
@@ -60,11 +60,11 @@ class KeyPressHandler extends GObject.Object {
             // Placeholder
             this._soundFeedback = {
                 play: (soundType) => {
-                    log(`[BetterKeys] Playing sound: ${soundType}`);
+                    log(`[betterKeys] Playing sound: ${soundType}`);
                 }
             };
         } catch (error) {
-            logError(`[BetterKeys] Failed to initialize sound feedback: ${error}`);
+            logError(`[betterKeys] Failed to initialize sound feedback: ${error}`);
         }
 
         // Visual feedback is handled by the UI components
@@ -109,7 +109,7 @@ class KeyPressHandler extends GObject.Object {
         }
 
         this.emit('key-pressed', keyLabel);
-        log(`[BetterKeys] Key pressed: ${keyLabel}`);
+        log(`[betterKeys] Key pressed: ${keyLabel}`);
     }
 
     /**
@@ -144,7 +144,7 @@ class KeyPressHandler extends GObject.Object {
         this._triggerFeedback(keyLabel, 'release');
 
         this.emit('key-released', keyLabel);
-        log(`[BetterKeys] Key released: ${keyLabel}`);
+        log(`[betterKeys] Key released: ${keyLabel}`);
     }
 
     /**
@@ -217,7 +217,7 @@ class KeyPressHandler extends GObject.Object {
      * Update key repeat timers (called periodically).
      * @param {number} currentTime - Current monotonic time in ms.
      */
-    updateKeyRepeat(currentTime) {
+    updateKeyRepeat(_currentTime) {
         // This method can be called from an update loop to handle
         // repeat logic without relying solely on GLib timers.
         // Currently using GLib timers, so this is a placeholder.
@@ -333,7 +333,7 @@ class KeyPressHandler extends GObject.Object {
         pressedKeys.forEach(keyLabel => {
             this.handleRelease(keyLabel);
         });
-        log('[BetterKeys] All keys released');
+        log('[betterKeys] All keys released');
     }
 
     /**
@@ -344,7 +344,7 @@ class KeyPressHandler extends GObject.Object {
     setRepeatParameters(delay, interval) {
         this._repeatDelay = delay;
         this._repeatInterval = interval;
-        log(`[BetterKeys] Repeat parameters set: delay=${delay}ms, interval=${interval}ms`);
+        log(`[betterKeys] Repeat parameters set: delay=${delay}ms, interval=${interval}ms`);
     }
 
     /**
@@ -354,7 +354,7 @@ class KeyPressHandler extends GObject.Object {
     setKeyRepeatEnabled(enable) {
         if (!enable) {
             // Stop all repeat timers
-            this._repeatTimers.forEach((timerId, keyLabel) => {
+            this._repeatTimers.forEach((timerId, _keyLabel) => {
                 GLib.source_remove(timerId);
             });
             this._repeatTimers.clear();
@@ -387,6 +387,3 @@ KeyPressHandler.signals = {
     'visual-feedback': { param_types: [GObject.TYPE_POINTER] },
     'key-repeat-enabled': { param_types: [GObject.TYPE_BOOLEAN] }
 };
-
-// Export the KeyPressHandler class
-var KeyPressHandler = KeyPressHandler;

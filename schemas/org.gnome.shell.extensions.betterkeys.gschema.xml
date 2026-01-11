@@ -141,5 +141,157 @@
       <summary>Auto-hide keyboard</summary>
       <description>Whether to automatically hide the keyboard when text field loses focus.</description>
     </key>
+    <!-- Clipboard History Settings -->
+    <key name="clipboard-history-enabled" type="b">
+      <default>true</default>
+      <summary>Enable clipboard history</summary>
+      <description>Track clipboard history for quick access to recently copied items.</description>
+    </key>
+    <key name="clipboard-history-max-items" type="i">
+      <default>50</default>
+      <summary>Clipboard history max items</summary>
+      <description>Maximum number of clipboard items to store (1-100).</description>
+    </key>
+    <key name="clipboard-history-privacy-mode" type="b">
+      <default>false</default>
+      <summary>Clipboard history privacy mode</summary>
+      <description>Do not track sensitive data (passwords, etc.) in clipboard history.</description>
+    </key>
+    <key name="clipboard-history-ttl" type="i">
+      <default>0</default>
+      <summary>Clipboard history time-to-live</summary>
+      <description>Time-to-live in seconds for clipboard items (0 = never expire).</description>
+    </key>
+    <key name="clipboard-history-search-enabled" type="b">
+      <default>true</default>
+      <summary>Enable clipboard history search</summary>
+      <description>Allow searching within clipboard history.</description>
+    </key>
+    <!-- Emoji Settings -->
+    <key name="emoji-recently-used-enabled" type="b">
+      <default>true</default>
+      <summary>Track recently used emojis</summary>
+      <description>Keep track of recently used emojis for quick access.</description>
+    </key>
+    <key name="emoji-skin-tone" type="s">
+      <default>'default'</default>
+      <summary>Default emoji skin tone</summary>
+      <description>Default skin tone for emojis that support skin tone variants.</description>
+    </key>
+    <key name="emoji-recent-limit" type="i">
+      <default>30</default>
+      <summary>Recently used emoji limit</summary>
+      <description>Maximum number of recently used emojis to store (1-100).</description>
+    </key>
+    <key name="emoji-search-enabled" type="b">
+      <default>true</default>
+      <summary>Enable emoji search</summary>
+      <description>Allow searching for emojis by name or keywords.</description>
+    </key>
+    <!-- Special Characters Settings -->
+    <key name="special-chars-custom-sets" type="as">
+      <default>[]</default>
+      <summary>Custom special character sets</summary>
+      <description>List of custom character set IDs to display in the special characters panel.</description>
+    </key>
+    <key name="special-chars-show-unicode" type="b">
+      <default>false</default>
+      <summary>Show Unicode code points</summary>
+      <description>Display Unicode code points alongside special characters.</description>
+    </key>
+    <!-- Enhanced Theming Settings -->
+    <key name="theme-auto-dark-light" type="b">
+      <default>true</default>
+      <summary>Follow system dark/light theme</summary>
+      <description>Automatically switch between light and dark themes based on system preference.</description>
+    </key>
+    <key name="theme-accent-color" type="s">
+      <default>''</default>
+      <summary>Custom accent color</summary>
+      <description>Custom accent color in hex format (e.g., #007bff). Empty uses theme default.</description>
+    </key>
+    <key name="theme-font-size-scale" type="d">
+      <default>1.0</default>
+      <summary>Font size scaling factor</summary>
+      <description>Scale factor for font sizes (0.5 to 2.0).</description>
+    </key>
+    <key name="theme-custom-css" type="s">
+      <default>''</default>
+      <summary>Custom CSS</summary>
+      <description>Additional custom CSS to apply to the keyboard.</description>
+    </key>
+    <!-- Enhanced Accessibility Settings -->
+    <key name="accessibility-sticky-keys" type="b">
+      <default>false</default>
+      <summary>Enable sticky keys</summary>
+      <description>Allow modifier keys (Shift, Ctrl, Alt) to stay active after release.</description>
+    </key>
+    <key name="accessibility-key-repeat-delay" type="i">
+      <default>600</default>
+      <summary>Key repeat delay</summary>
+      <description>Delay in milliseconds before key repeat starts (100-2000).</description>
+    </key>
+    <key name="accessibility-key-repeat-rate" type="i">
+      <default>50</default>
+      <summary>Key repeat rate</summary>
+      <description>Rate in milliseconds between repeated key events (20-200).</description>
+    </key>
+    <key name="accessibility-color-blind-mode" type="s">
+      <default>'none'</default>
+      <summary>Color blind mode</summary>
+      <description>Color adjustment for color blindness: none, protanopia, deuteranopia, tritanopia.</description>
+    </key>
+    <key name="accessibility-dyslexia-font" type="b">
+      <default>false</default>
+      <summary>Use dyslexia-friendly font</summary>
+      <description>Use a font designed for better readability with dyslexia.</description>
+    </key>
+    <key name="accessibility-screen-reader" type="b">
+      <default>true</default>
+      <summary>Enable screen reader support</summary>
+      <description>Provide accessibility information to screen readers (ATK/ATSPI).</description>
+    </key>
+    <key name="accessibility-focus-indicator" type="b">
+      <default>true</default>
+      <summary>Show focus indicator</summary>
+      <description>Display a visual indicator for focused keyboard elements.</description>
+    </key>
+    <key name="accessibility-tooltips" type="b">
+      <default>true</default>
+      <summary>Show tooltips</summary>
+      <description>Display tooltips for keyboard buttons and controls.</description>
+    </key>
+    <!-- Voice Input Settings -->
+    <key name="voice-input-enabled" type="b">
+      <default>false</default>
+      <summary>Enable voice input</summary>
+      <description>Enable voice input via microphone (requires permissions).</description>
+    </key>
+    <key name="voice-input-language" type="s">
+      <default>'en-US'</default>
+      <summary>Voice input language</summary>
+      <description>Language code for voice recognition (e.g., en-US, fr-FR).</description>
+    </key>
+    <key name="voice-input-sensitivity" type="i">
+      <default>50</default>
+      <summary>Voice input sensitivity</summary>
+      <description>Sensitivity of voice recognition (0-100).</description>
+    </key>
+    <!-- IBus Integration Settings -->
+    <key name="ibus-integration-enabled" type="b">
+      <default>true</default>
+      <summary>Enable IBus integration</summary>
+      <description>Integrate with IBus input method framework for better compatibility.</description>
+    </key>
+    <key name="ibus-language" type="s">
+      <default>'en'</default>
+      <summary>IBus language</summary>
+      <description>Default language for IBus input method.</description>
+    </key>
+    <key name="ibus-input-mode" type="s">
+      <default>'direct'</default>
+      <summary>IBus input mode</summary>
+      <description>Input mode for IBus: direct or preedit.</description>
+    </key>
   </schema>
 </schemalist>
