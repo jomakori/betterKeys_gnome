@@ -2,7 +2,7 @@
 
 const { GObject } = imports.gi;
 
-const VisibilityManager = GObject.registerClass(
+var VisibilityManager = GObject.registerClass(
 class VisibilityManager extends GObject.Object {
     _init(settingsManager, windowManager) {
         super._init();

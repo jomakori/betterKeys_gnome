@@ -2,7 +2,7 @@
 
 const { GObject, St, Clutter, GLib } = imports.gi;
 
-const betterKeysAccessibilityManager = GObject.registerClass(
+var betterKeysAccessibilityManager = GObject.registerClass(
 class betterKeysAccessibilityManager extends GObject.Object {
     _init(settingsManager, themeManager) {
         super._init();

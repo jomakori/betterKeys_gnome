@@ -6,7 +6,7 @@ const { GObject, Clutter, GLib } = imports.gi;
  * GestureRecognizer tracks touch strokes and recognizes gestures
  * such as swipe, long‑press, pinch, etc.
  */
-const GestureRecognizer = GObject.registerClass(
+var GestureRecognizer = GObject.registerClass(
 class GestureRecognizer extends GObject.Object {
     _init(settingsManager) {
         super._init();

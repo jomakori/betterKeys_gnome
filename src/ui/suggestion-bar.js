@@ -5,7 +5,7 @@ const { GObject, St } = imports.gi;
 /**
  * SuggestionBar - Displays word suggestions above the keyboard
  */
-const SuggestionBar = GObject.registerClass(
+var SuggestionBar = GObject.registerClass(
 class SuggestionBar extends St.BoxLayout {
     _init(predictor, settingsManager) {
         super._init({

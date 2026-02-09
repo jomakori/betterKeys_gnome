@@ -1,7 +1,6 @@
 {
   "name": "betterkeys_gnome",
   "version": "1.0.0",
-  "type": "module",
   "description": "A production-grade GNOME Shell virtual keyboard extension with advanced features, performance optimization, security hardening, comprehensive testing, and complete documentation.",
   "main": "extension.js",
   "directories": {

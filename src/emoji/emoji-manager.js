@@ -4,7 +4,7 @@ const { GObject, Gio, GLib } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const EmojiManager = GObject.registerClass(
+var EmojiManager = GObject.registerClass(
 class EmojiManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

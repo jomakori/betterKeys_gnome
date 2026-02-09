@@ -5,7 +5,7 @@ const { GObject, Gio, GLib } = imports.gi;
 /**
  * Vocabulary - Manages word lists, frequencies, and multi-language support
  */
-const Vocabulary = GObject.registerClass(
+var Vocabulary = GObject.registerClass(
 class Vocabulary extends GObject.Object {
     _init(settingsManager) {
         super._init();

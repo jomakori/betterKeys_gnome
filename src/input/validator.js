@@ -7,7 +7,7 @@ const { GObject, GLib } = imports.gi;
  * filters invalid key codes, implements rate limiting, and prevents
  * malicious patterns.
  */
-const InputValidator = GObject.registerClass(
+var InputValidator = GObject.registerClass(
 class InputValidator extends GObject.Object {
     _init(settingsManager) {
         super._init();

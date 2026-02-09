@@ -5,7 +5,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const VoiceInputManager = GObject.registerClass(
+var VoiceInputManager = GObject.registerClass(
 class VoiceInputManager extends GObject.Object {
     _init(settingsManager, inputBridge) {
         super._init();

@@ -4,7 +4,7 @@ const { GObject, St, Clutter, Gio, GLib, Atk } = imports.gi;
 const Gettext = imports.gettext;
 const _ = Gettext.gettext;
 
-const betterKeysKey = GObject.registerClass(
+var betterKeysKey = GObject.registerClass(
 class betterKeysKey extends St.Button {
     _init(label, width = 60, height = 60) {
         super._init({

@@ -3,7 +3,7 @@
 const { GObject, GLib } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 
-const SettingsManager = GObject.registerClass(
+var SettingsManager = GObject.registerClass(
 class SettingsManager extends GObject.Object {
     _init() {
         super._init();

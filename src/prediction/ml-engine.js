@@ -5,7 +5,7 @@ const { GObject, Gio, GLib } = imports.gi;
 /**
  * MLEngine - Neural network-based word prediction and learning
  */
-const MLEngine = GObject.registerClass(
+var MLEngine = GObject.registerClass(
 class MLEngine extends GObject.Object {
     _init(vocabularyManager, settingsManager) {
         super._init();

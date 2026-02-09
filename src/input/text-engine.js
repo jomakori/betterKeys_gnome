@@ -11,7 +11,7 @@ const MLEngine = imports.src.prediction['ml-engine'];
  * TextEngine handles text input operations including insertion, deletion,
  * selection, clipboard integration, and undo/redo management.
  */
-const TextEngine = GObject.registerClass(
+var TextEngine = GObject.registerClass(
 class TextEngine extends GObject.Object {
     _init(settingsManager) {
         super._init();

@@ -2,7 +2,7 @@
 
 const { GObject, St, Clutter } = imports.gi;
 
-const betterKeysWindowManager = GObject.registerClass(
+var betterKeysWindowManager = GObject.registerClass(
 class betterKeysWindowManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

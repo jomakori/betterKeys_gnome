@@ -4,7 +4,7 @@
  * EventEmitter provides a lightweight, memory‑safe event system
  * for component communication within betterKeys.
  */
-const betterKeysEventEmitter = GObject.registerClass(
+var betterKeysEventEmitter = GObject.registerClass(
 class betterKeysEventEmitter extends GObject.Object {
     _init() {
         super._init();

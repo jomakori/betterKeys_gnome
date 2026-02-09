@@ -5,7 +5,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-const ClipboardPanel = GObject.registerClass(
+var ClipboardPanel = GObject.registerClass(
 class ClipboardPanel extends St.BoxLayout {
     _init(clipboardManager, settingsManager) {
         super._init({

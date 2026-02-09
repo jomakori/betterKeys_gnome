@@ -5,7 +5,7 @@ const { GObject } = imports.gi;
 /**
  * Predictor - Provides word predictions and suggestions based on context
  */
-const Predictor = GObject.registerClass(
+var Predictor = GObject.registerClass(
 class Predictor extends GObject.Object {
     _init(vocabularyManager, settingsManager) {
         super._init();

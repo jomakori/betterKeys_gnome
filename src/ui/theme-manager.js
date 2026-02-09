@@ -4,7 +4,7 @@ const { GObject, Gio, GLib, St } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const ThemeManagerClass = GObject.registerClass(
+var ThemeManagerClass = GObject.registerClass(
 class ThemeManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

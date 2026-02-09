@@ -12,7 +12,7 @@ try {
     log('[betterKeys] IBusIntegration module not available, using fallback');
 }
 
-const betterKeysInputMethodBridge = GObject.registerClass(
+var betterKeysInputMethodBridge = GObject.registerClass(
 class betterKeysInputMethodBridge extends GObject.Object {
     _init(settingsManager) {
         super._init();

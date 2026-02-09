@@ -6,7 +6,7 @@ const { GObject, Clutter, GLib } = imports.gi;
  * KeyboardManager handles keyboard lifecycle, layout loading,
  * key state management, multi-touch, positioning, and window focus tracking.
  */
-const KeyboardManager = GObject.registerClass(
+var KeyboardManager = GObject.registerClass(
 class KeyboardManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

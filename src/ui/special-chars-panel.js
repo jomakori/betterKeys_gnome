@@ -5,7 +5,7 @@ const Main = imports.ui.main;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const SpecialCharsPanel = GObject.registerClass(
+var SpecialCharsPanel = GObject.registerClass(
 class SpecialCharsPanel extends St.BoxLayout {
     _init(settingsManager) {
         super._init({

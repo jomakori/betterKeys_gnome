@@ -7,7 +7,7 @@ const { GObject, GLib } = imports.gi;
  * modifier state tracking, key repeat, and triggers visual,
  * haptic, and sound feedback.
  */
-const KeyPressHandler = GObject.registerClass(
+var KeyPressHandler = GObject.registerClass(
 class KeyPressHandler extends GObject.Object {
     _init(settingsManager) {
         super._init();

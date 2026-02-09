@@ -3,12 +3,14 @@
 const { GObject, St, Clutter, GLib } = imports.gi;
 const Main = imports.ui.main;
 const PopupMenu = imports.ui.popupMenu;
+const ExtensionUtils = imports.misc.extensionUtils;
+const Me = ExtensionUtils.getCurrentExtension();
 
 const Key = Me.imports.src.ui.key.Key;
 const LayoutManager = Me.imports.src.keyboard['layout-manager'].LayoutManager;
 const LayoutAdapter = Me.imports.src.keyboard['layout-adapter'].LayoutAdapter;
 
-const betterKeysKeyboardUI = GObject.registerClass(
+var betterKeysKeyboardUI = GObject.registerClass(
 class betterKeysKeyboardUI extends St.Widget {
     _init(settingsManager) {
         super._init({

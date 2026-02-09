@@ -5,7 +5,7 @@ const { Clutter, GObject, St, GLib } = imports.gi;
 /**
  * Animation manager for coordinating visual effects across the keyboard.
  */
-const betterKeysAnimationManager = GObject.registerClass(
+var betterKeysAnimationManager = GObject.registerClass(
 class betterKeysAnimationManager extends GObject.Object {
     _init() {
         super._init();

@@ -4,7 +4,7 @@ const { GObject, GLib, Gio, IBus } = imports.gi;
 const ExtensionUtils = imports.misc.extensionUtils;
 const Me = ExtensionUtils.getCurrentExtension();
 
-const betterKeysIBusIntegration = GObject.registerClass(
+var betterKeysIBusIntegration = GObject.registerClass(
 class betterKeysIBusIntegration extends GObject.Object {
     _init(settingsManager) {
         super._init();

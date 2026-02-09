@@ -5,7 +5,7 @@ const Main = imports.ui.main;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
 
-const EmojiPanel = GObject.registerClass(
+var EmojiPanel = GObject.registerClass(
 class EmojiPanel extends St.BoxLayout {
     _init(emojiManager, settingsManager) {
         super._init({

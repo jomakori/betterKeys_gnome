@@ -13,7 +13,7 @@ const { GObject, GLib, Gio, Clutter } = imports.gi;
  * - Batch DOM updates and rendering optimizations
  * - Memory footprint monitoring and cleanup
  */
-const PerformanceOptimizer = GObject.registerClass(
+var PerformanceOptimizer = GObject.registerClass(
 class PerformanceOptimizer extends GObject.Object {
     _init(settingsManager) {
         super._init();

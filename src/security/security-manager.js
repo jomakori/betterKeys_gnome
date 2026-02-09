@@ -6,7 +6,7 @@ const { GObject, GLib, Gio, Gdk } = imports.gi;
  * SecurityManager - Centralized security hardening, validation, encryption,
  * permission management, sandboxing, and vulnerability scanning.
  */
-const SecurityManager = GObject.registerClass(
+var SecurityManager = GObject.registerClass(
 class SecurityManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

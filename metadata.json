@@ -1,10 +1,7 @@
 {
-  "name": "betterKeys OSK",
-  "description": "A better touch keyboard (OSK) for GNOME. Sleek, mobile-friendly, gesture-powered, and fully customizable for your typing style.",
+  "name": "betterKeys",
+  "description": "A better virtual keyboard for GNOME",
   "uuid": "betterkeys@jomakori.github.com",
-  "shell-version": ["40", "41", "42", "43", "44", "45", "46"],
-  "url": "https://github.com/jomakori/betterkeys_gnome",
-  "version": 1,
-  "icon": "logo.png",
-  "settings-schema": "org.gnome.shell.extensions.betterkeys"
+  "shell-version": ["49"],
+  "version": 1
 }

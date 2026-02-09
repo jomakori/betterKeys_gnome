@@ -8,7 +8,7 @@ const Me = ExtensionUtils.getCurrentExtension();
  * LayoutManager loads keyboard layouts from JSON files, validates them,
  * supports multiple layout types, caching, and composition.
  */
-const LayoutManager = GObject.registerClass(
+var LayoutManager = GObject.registerClass(
 class LayoutManager extends GObject.Object {
     _init() {
         super._init();

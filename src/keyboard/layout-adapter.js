@@ -5,7 +5,7 @@ const { GObject, GLib, Meta } = imports.gi;
 /**
  * LayoutAdapter - Adapts keyboard layout based on active window and input context
  */
-const LayoutAdapter = GObject.registerClass(
+var LayoutAdapter = GObject.registerClass(
 class LayoutAdapter extends GObject.Object {
     _init(layoutManager, settingsManager) {
         super._init();

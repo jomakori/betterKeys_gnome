@@ -7,7 +7,7 @@ const { GObject, Clutter, GLib } = imports.gi;
  * Normalizes events across X11 and Wayland, provides debouncing,
  * and feeds into gesture recognition pipeline.
  */
-const InputEventHandler = GObject.registerClass(
+var InputEventHandler = GObject.registerClass(
 class InputEventHandler extends GObject.Object {
     _init(keyboardUI, settingsManager) {
         super._init();
