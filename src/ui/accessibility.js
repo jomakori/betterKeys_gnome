@@ -1,9 +1,13 @@
 /* src/ui/accessibility.js - Enhanced Accessibility features for betterKeys */
 
-const { GObject, St, Clutter, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var betterKeysAccessibilityManager = GObject.registerClass(
-class betterKeysAccessibilityManager extends GObject.Object {
+export const AccessibilityManager = GObject.registerClass(
+class AccessibilityManager extends GObject.Object {
     _init(settingsManager, themeManager) {
         super._init();
 
@@ -518,11 +522,11 @@ class betterKeysAccessibilityManager extends GObject.Object {
         tooltip.y = keyY - tooltip.height - 5;
 
         // Add to stage
-        Main.uiGroup.add_child(tooltip);
+        _getMain().uiGroup.add_child(tooltip);
 
         // Remove after duration
         this._tooltipTimeoutId = GLib.timeout_add(GLib.PRIORITY_DEFAULT, duration, () => {
-            Main.uiGroup.remove_child(tooltip);
+            _getMain().uiGroup.remove_child(tooltip);
             tooltip.destroy();
             this._tooltipTimeoutId = 0;
             return GLib.SOURCE_REMOVE;
@@ -635,10 +639,9 @@ class betterKeysAccessibilityManager extends GObject.Object {
 });
 
 // Add signals to the class
-betterKeysAccessibilityManager.signals = {
+AccessibilityManager.signals = {
     'accessibility-changed': { param_types: [GObject.TYPE_STRING] },
     'screen-reader-toggled': { param_types: [GObject.TYPE_BOOLEAN] }
 };
 
-// Export the AccessibilityManager class
-var AccessibilityManager = betterKeysAccessibilityManager;
+function _getMain() { return Main; }

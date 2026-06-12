@@ -1,6 +1,9 @@
 /* src/performance/optimizer.js - Performance optimization, caching, and monitoring */
 
-const { GObject, GLib, Gio, Clutter } = imports.gi;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import Clutter from 'gi://Clutter';
 
 /**
  * PerformanceOptimizer - Centralized performance optimization and monitoring
@@ -13,7 +16,7 @@ const { GObject, GLib, Gio, Clutter } = imports.gi;
  * - Batch DOM updates and rendering optimizations
  * - Memory footprint monitoring and cleanup
  */
-var PerformanceOptimizer = GObject.registerClass(
+export const PerformanceOptimizer = GObject.registerClass(
 class PerformanceOptimizer extends GObject.Object {
     _init(settingsManager) {
         super._init();

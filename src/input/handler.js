@@ -1,13 +1,15 @@
 /* src/input/handler.js - Input event capture and processing */
 
-const { GObject, Clutter, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 
 /**
  * Input event handler for touch, mouse, and stylus input.
  * Normalizes events across X11 and Wayland, provides debouncing,
  * and feeds into gesture recognition pipeline.
  */
-var InputEventHandler = GObject.registerClass(
+export const InputEventHandler = GObject.registerClass(
 class InputEventHandler extends GObject.Object {
     _init(keyboardUI, settingsManager) {
         super._init();

@@ -1,11 +1,11 @@
 /* src/prediction/predictor.js - Predictive text engine with word suggestions */
 
-const { GObject } = imports.gi;
+import GObject from 'gi://GObject';
 
 /**
  * Predictor - Provides word predictions and suggestions based on context
  */
-var Predictor = GObject.registerClass(
+export const Predictor = GObject.registerClass(
 class Predictor extends GObject.Object {
     _init(vocabularyManager, settingsManager) {
         super._init();

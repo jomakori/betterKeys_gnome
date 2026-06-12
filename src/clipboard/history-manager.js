@@ -1,16 +1,16 @@
 /* src/clipboard/history-manager.js - Clipboard history tracking and management */
 
-const { GObject, Gio, GLib } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
-var ClipboardHistoryManager = GObject.registerClass(
+export const ClipboardHistoryManager = GObject.registerClass(
 class ClipboardHistoryManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
 
         this._settings = settingsManager;
-        this._clipboard = Gtk.Clipboard.get_default(Gdk.Display.get_default());
+        this._clipboard = null;
         this._history = [];
         this._maxItems = 50;
         this._privacyMode = false;
@@ -18,6 +18,18 @@ class ClipboardHistoryManager extends GObject.Object {
         this._storageKey = 'clipboard-history';
         this._ignoreNextChange = false;
         this._changeHandlerId = 0;
+
+        // Initialize clipboard (Gtk not available in GNOME Shell process)
+        (async () => {
+            try {
+                const Gtk = await import('gi://Gtk');
+                const Gdk = await import('gi://Gdk');
+                this._clipboard = Gtk.Clipboard.get_default(Gdk.Display.get_default());
+            } catch (error) {
+                logError('[betterKeys] Gtk/Gdk not available in shell process, clipboard monitoring disabled');
+                this._clipboard = null;
+            }
+        })();
 
         // Load saved history from GSettings
         this._loadHistory();
@@ -29,13 +41,24 @@ class ClipboardHistoryManager extends GObject.Object {
     }
 
     _startMonitoring() {
-        // Connect to clipboard change signal
-        this._changeHandlerId = this._clipboard.connect('owner-change', this._onClipboardChanged.bind(this));
+        // Connect to clipboard change signal (Gtk not available in shell process)
+        if (!this._clipboard) {
+            return;
+        }
+        try {
+            this._changeHandlerId = this._clipboard.connect('owner-change', this._onClipboardChanged.bind(this));
+        } catch (error) {
+            logError('[betterKeys] Failed to connect to clipboard: ' + error);
+        }
     }
 
     _stopMonitoring() {
-        if (this._changeHandlerId) {
-            this._clipboard.disconnect(this._changeHandlerId);
+        if (this._changeHandlerId && this._clipboard) {
+            try {
+                this._clipboard.disconnect(this._changeHandlerId);
+            } catch (error) {
+                logError('[betterKeys] Failed to disconnect clipboard: ' + error);
+            }
             this._changeHandlerId = 0;
         }
     }
@@ -46,8 +69,14 @@ class ClipboardHistoryManager extends GObject.Object {
             return;
         }
 
-        // Get clipboard content
-        const text = clipboard.wait_for_text();
+        // Get clipboard content (Gtk not available in shell process)
+        let text;
+        try {
+            text = clipboard.wait_for_text();
+        } catch (error) {
+            logError('[betterKeys] Failed to get clipboard text: ' + error);
+            return;
+        }
         if (!text) {
             return; // Non-text content, ignore for now
         }
@@ -256,9 +285,18 @@ class ClipboardHistoryManager extends GObject.Object {
             return false;
         }
 
-        // Set clipboard content
-        this._ignoreNextChange = true;
-        this._clipboard.set_text(item.text, -1);
+        // Set clipboard content (Gtk not available in shell process)
+        if (!this._clipboard) {
+            logError('[betterKeys] Clipboard not available in shell process');
+            return false;
+        }
+        try {
+            this._ignoreNextChange = true;
+            this._clipboard.set_text(item.text, -1);
+        } catch (error) {
+            logError('[betterKeys] Failed to set clipboard text: ' + error);
+            return false;
+        }
 
         // Move item to front (most recent)
         this._removeDuplicate(item.text);

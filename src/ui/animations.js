@@ -1,12 +1,15 @@
 /* src/ui/animations.js - Visual effects and animations for betterKeys */
 
-const { Clutter, GObject, St, GLib } = imports.gi;
+import Clutter from 'gi://Clutter';
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import GLib from 'gi://GLib';
 
 /**
  * Animation manager for coordinating visual effects across the keyboard.
  */
-var betterKeysAnimationManager = GObject.registerClass(
-class betterKeysAnimationManager extends GObject.Object {
+export const AnimationManager = GObject.registerClass(
+class AnimationManager extends GObject.Object {
     _init() {
         super._init();
 
@@ -860,6 +863,3 @@ class betterKeysAnimationManager extends GObject.Object {
         log('[betterKeys] AnimationManager destroyed');
     }
 });
-
-// Export the AnimationManager class
-var AnimationManager = betterKeysAnimationManager;

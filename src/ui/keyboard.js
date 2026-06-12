@@ -1,17 +1,17 @@
 /* src/ui/keyboard.js - Main keyboard UI component */
 
-const { GObject, St, Clutter, GLib } = imports.gi;
-const Main = imports.ui.main;
-const PopupMenu = imports.ui.popupMenu;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
+import * as PopupMenu from 'resource:///org/gnome/shell/ui/popupMenu.js';
+import { Key } from './key.js';
+import { LayoutManager } from '../keyboard/layout-manager.js';
+import { LayoutAdapter } from '../keyboard/layout-adapter.js';
 
-const Key = Me.imports.src.ui.key.Key;
-const LayoutManager = Me.imports.src.keyboard['layout-manager'].LayoutManager;
-const LayoutAdapter = Me.imports.src.keyboard['layout-adapter'].LayoutAdapter;
-
-var betterKeysKeyboardUI = GObject.registerClass(
-class betterKeysKeyboardUI extends St.Widget {
+export const KeyboardUI = GObject.registerClass(
+class KeyboardUI extends St.Widget {
     _init(settingsManager) {
         super._init({
             reactive: true,
@@ -115,7 +115,7 @@ class betterKeysKeyboardUI extends St.Widget {
         this._layoutIndicator.hide();
         this.add_child(this._layoutIndicator);
 
-        // Layout switcher popup menu
+        const PopupMenu = this._getPopupMenu();
         this._layoutSwitcher = new PopupMenu.PopupMenu(this._layoutIndicator, 0.0, 0.0, 0);
         this._layoutSwitcher.connect('open-state-changed', this._onLayoutSwitcherToggle.bind(this));
 
@@ -174,7 +174,7 @@ class betterKeysKeyboardUI extends St.Widget {
 
         // Add layout items
         layouts.forEach(layout => {
-            const item = new PopupMenu.PopupMenuItem(layout.name);
+            const item = new (this._getPopupMenu()).PopupMenuItem(layout.name);
             item.connect('activate', () => {
                 this.switchLayout(layout.id);
                 this._layoutSwitcher.close();
@@ -183,10 +183,10 @@ class betterKeysKeyboardUI extends St.Widget {
         });
 
         // Add separator
-        this._layoutSwitcher.addMenuItem(new PopupMenu.PopupSeparatorMenuItem());
+        this._layoutSwitcher.addMenuItem(new (this._getPopupMenu()).PopupSeparatorMenuItem());
 
         // Add "Layout Settings" item
-        const settingsItem = new PopupMenu.PopupMenuItem(_('Layout Settings'));
+        const settingsItem = new (this._getPopupMenu()).PopupMenuItem(_('Layout Settings'));
         settingsItem.connect('activate', () => {
             this._openLayoutSettings();
             this._layoutSwitcher.close();
@@ -729,7 +729,7 @@ class betterKeysKeyboardUI extends St.Widget {
         }
 
         // Add to the stage
-        Main.uiGroup.add_child(this);
+        this._getMainUiGroup().add_child(this);
 
         // Update position based on docking
         this._updatePosition();
@@ -770,7 +770,7 @@ class betterKeysKeyboardUI extends St.Widget {
             duration: 150,
             mode: Clutter.AnimationMode.EASE_IN_QUAD,
             onComplete: () => {
-                Main.uiGroup.remove_child(this);
+                this._getMainUiGroup().remove_child(this);
                 this._isVisible = false;
                 log('[betterKeys] Keyboard hidden with animation');
             }
@@ -865,13 +865,24 @@ class betterKeysKeyboardUI extends St.Widget {
         super.destroy();
         log('[betterKeys] KeyboardUI destroyed');
     }
+
+    _getPopupMenu() {
+        if (!this._popupMenu) {
+            this._popupMenu = PopupMenu;
+        }
+        return this._popupMenu;
+    }
+
+    _getMainUiGroup() {
+        if (!this._mainUiGroup) {
+            this._mainUiGroup = Main.uiGroup;
+        }
+        return this._mainUiGroup;
+    }
 });
 
 // Add signals to the class
-betterKeysKeyboardUI.signals = {
+KeyboardUI.signals = {
     'key-pressed': { param_types: [GObject.TYPE_STRING] },
     'layout-changed': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export the KeyboardUI class
-var KeyboardUI = betterKeysKeyboardUI;

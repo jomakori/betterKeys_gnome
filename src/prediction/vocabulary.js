@@ -1,11 +1,13 @@
 /* src/prediction/vocabulary.js - Vocabulary management for word lists and frequencies */
 
-const { GObject, Gio, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 /**
  * Vocabulary - Manages word lists, frequencies, and multi-language support
  */
-var Vocabulary = GObject.registerClass(
+export const Vocabulary = GObject.registerClass(
 class Vocabulary extends GObject.Object {
     _init(settingsManager) {
         super._init();

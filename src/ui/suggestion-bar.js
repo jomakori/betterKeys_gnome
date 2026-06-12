@@ -1,11 +1,12 @@
 /* src/ui/suggestion-bar.js - Suggestion bar UI for word predictions */
 
-const { GObject, St } = imports.gi;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
 
 /**
  * SuggestionBar - Displays word suggestions above the keyboard
  */
-var SuggestionBar = GObject.registerClass(
+export const SuggestionBar = GObject.registerClass(
 class SuggestionBar extends St.BoxLayout {
     _init(predictor, settingsManager) {
         super._init({

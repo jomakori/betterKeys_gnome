@@ -1,11 +1,16 @@
 /* src/ui/key.js - Individual key component */
 
-const { GObject, St, Clutter, Gio, GLib, Atk } = imports.gi;
-const Gettext = imports.gettext;
-const _ = Gettext.gettext;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import Atk from 'gi://Atk';
 
-var betterKeysKey = GObject.registerClass(
-class betterKeysKey extends St.Button {
+function _(str) { return str; }
+
+export const Key = GObject.registerClass(
+class Key extends St.Button {
     _init(label, width = 60, height = 60) {
         super._init({
             reactive: true,
@@ -288,10 +293,7 @@ class betterKeysKey extends St.Button {
 });
 
 // Add signals to the class
-betterKeysKey.signals = {
+Key.signals = {
     'pressed': { param_types: [GObject.TYPE_STRING] },
     'long-press': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export the Key class
-var Key = betterKeysKey;

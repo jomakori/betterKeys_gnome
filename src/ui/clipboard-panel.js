@@ -1,11 +1,12 @@
 /* src/ui/clipboard-panel.js - Floating clipboard history panel */
 
-const { GObject, St, Clutter, Pango, Gtk, Gdk } = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Pango from 'gi://Pango';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var ClipboardPanel = GObject.registerClass(
+export const ClipboardPanel = GObject.registerClass(
 class ClipboardPanel extends St.BoxLayout {
     _init(clipboardManager, settingsManager) {
         super._init({
@@ -643,7 +644,7 @@ class ClipboardPanel extends St.BoxLayout {
             selectedItemId: this._selectedItemId,
             panelWidth: this._panelWidth,
             panelHeight: this._panelHeight
-        };
+};
     }
 
     /**

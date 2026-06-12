@@ -1,11 +1,14 @@
 /* src/ui/special-chars-panel.js - Floating special characters panel */
 
-const { GObject, St, Clutter, Pango, Gtk, Gio, GLib } = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Pango from 'gi://Pango';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var SpecialCharsPanel = GObject.registerClass(
+export const SpecialCharsPanel = GObject.registerClass(
 class SpecialCharsPanel extends St.BoxLayout {
     _init(settingsManager) {
         super._init({

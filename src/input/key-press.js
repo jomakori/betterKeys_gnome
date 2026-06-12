@@ -1,13 +1,14 @@
 /* src/input/key-press.js - Individual key press handling, repeat, feedback */
 
-const { GObject, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 
 /**
  * KeyPressHandler manages individual key press/release logic,
  * modifier state tracking, key repeat, and triggers visual,
  * haptic, and sound feedback.
  */
-var KeyPressHandler = GObject.registerClass(
+export const KeyPressHandler = GObject.registerClass(
 class KeyPressHandler extends GObject.Object {
     _init(settingsManager) {
         super._init();

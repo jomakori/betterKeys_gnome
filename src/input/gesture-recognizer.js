@@ -1,12 +1,14 @@
 /* src/input/gesture-recognizer.js - Gesture recognition for swipe, long‑press, pinch */
 
-const { GObject, Clutter, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
 
 /**
  * GestureRecognizer tracks touch strokes and recognizes gestures
  * such as swipe, long‑press, pinch, etc.
  */
-var GestureRecognizer = GObject.registerClass(
+export const GestureRecognizer = GObject.registerClass(
 class GestureRecognizer extends GObject.Object {
     _init(settingsManager) {
         super._init();
@@ -802,6 +804,3 @@ GestureRecognizer.signals = {
     'gesture': { param_types: [GObject.TYPE_STRING, GObject.TYPE_POINTER] },
     'gesture-detected': { param_types: [GObject.TYPE_STRING, GObject.TYPE_POINTER] }
 };
-
-// Export the GestureRecognizer class (already defined as GestureRecognizer)
-// var GestureRecognizer = GestureRecognizer; // Removed duplicate declaration

@@ -1,11 +1,13 @@
 /* src/utils/event-emitter.js - Custom event system for component communication */
 
+import GObject from 'gi://GObject';
+
 /**
  * EventEmitter provides a lightweight, memory‑safe event system
  * for component communication within betterKeys.
  */
-var betterKeysEventEmitter = GObject.registerClass(
-class betterKeysEventEmitter extends GObject.Object {
+export const EventEmitter = GObject.registerClass(
+class EventEmitter extends GObject.Object {
     _init() {
         super._init();
 
@@ -311,6 +313,3 @@ class betterKeysEventEmitter extends GObject.Object {
         log('[betterKeys] EventEmitter destroyed');
     }
 });
-
-// Export the EventEmitter class
-var EventEmitter = betterKeysEventEmitter;

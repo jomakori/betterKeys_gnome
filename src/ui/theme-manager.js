@@ -1,10 +1,32 @@
 /* src/ui/theme-manager.js - Theme management for betterKeys */
 
-const { GObject, Gio, GLib, St } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import St from 'gi://St';
 
-var ThemeManagerClass = GObject.registerClass(
+function hexToRgb(hex) {
+    const h = String(hex || '').replace('#', '');
+    if (h.length !== 6) return { r: 240, g: 240, b: 240 };
+    return {
+        r: parseInt(h.slice(0, 2), 16),
+        g: parseInt(h.slice(2, 4), 16),
+        b: parseInt(h.slice(4, 6), 16)
+    };
+}
+
+function collectByStyleClass(root, cls, out = []) {
+    if (!root || typeof root.get_children !== 'function') return out;
+    for (const child of root.get_children()) {
+        if (typeof child.has_style_class_name === 'function' && child.has_style_class_name(cls)) {
+            out.push(child);
+        }
+        collectByStyleClass(child, cls, out);
+    }
+    return out;
+}
+
+export const ThemeManagerClass = GObject.registerClass(
 class ThemeManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
@@ -12,7 +34,8 @@ class ThemeManager extends GObject.Object {
         this._settings = settingsManager;
         this._currentTheme = 'light';
         this._themes = new Map();
-        this._cssProvider = null;
+        this._keyboardUI = null;
+        this._appliedThemeClass = null;
         this._systemThemeSync = false;
         this._accentColor = '#007bff';
         this._fontSize = 'medium';
@@ -303,6 +326,14 @@ class ThemeManager extends GObject.Object {
         }
     }
 
+    setKeyboardUI(keyboardUI) {
+        this._keyboardUI = keyboardUI;
+    }
+
+    applyCurrentTheme() {
+        this._applyTheme(this._currentTheme);
+    }
+
     _applyTheme(themeId) {
         const theme = this._themes.get(themeId);
         if (!theme) {
@@ -312,28 +343,18 @@ class ThemeManager extends GObject.Object {
 
         this._currentTheme = themeId;
 
-        // Create CSS provider if not exists
-        if (!this._cssProvider) {
-            this._cssProvider = new St.CssProvider();
-            St.StyleContext.add_provider_for_screen(
-                global.screen,
-                this._cssProvider,
-                St.STYLE_PROVIDER_PRIORITY_APPLICATION
-            );
+        const actor = this._keyboardUI;
+        if (!actor) {
+            return;
         }
 
-        // Build CSS string
-        let css = ':root {\n';
-        Object.entries(theme.colors).forEach(([variable, value]) => {
-            css += `  ${variable}: ${value};\n`;
-        });
-
-        // Add accent color override if custom accent is set
-        if (this._accentColor !== theme.colors['--betterkeys-accent']) {
-            css += `  --betterkeys-accent: ${this._accentColor};\n`;
+        const nextClass = `betterkeys-theme-${themeId}`;
+        if (this._appliedThemeClass && this._appliedThemeClass !== nextClass) {
+            actor.remove_style_class_name(this._appliedThemeClass);
         }
+        actor.add_style_class_name(nextClass);
+        this._appliedThemeClass = nextClass;
 
-        // Add font size scaling
         const fontSizeMap = {
             'small': '0.9em',
             'medium': '1em',
@@ -341,21 +362,44 @@ class ThemeManager extends GObject.Object {
             'extra-large': '1.25em'
         };
         const fontSize = fontSizeMap[this._fontSize] || '1em';
-        css += `  --betterkeys-font-size: ${fontSize};\n`;
 
-        // Add opacity
-        css += `  --betterkeys-opacity: ${this._opacity};\n`;
+        const bgHex = theme.colors['--betterkeys-bg'] || '#f0f0f0';
+        const bg = hexToRgb(bgHex);
+        const bgRgba = `rgba(${bg.r}, ${bg.g}, ${bg.b}, ${this._opacity})`;
 
-        css += '}\n';
+        const inlineRules = [
+            `background-color: ${bgRgba}`,
+            `font-size: ${fontSize}`,
+            `color: ${theme.colors['--betterkeys-text'] || '#222222'}`
+        ];
 
-        // Apply CSS
         try {
-            this._cssProvider.load_from_data(css, -1);
-            log(`[betterKeys] Applied theme: ${themeId}`);
-            this.emit('theme-changed', themeId);
-        } catch (error) {
-            logError(`[betterKeys] Failed to apply theme CSS: ${error}`);
+            actor.set_style(inlineRules.join('; ') + ';');
+        } catch (e) {
+            logError(`[betterKeys] Failed to set inline keyboard style: ${e}`);
         }
+
+        this._applyAccentOverrides(theme);
+
+        log(`[betterKeys] Applied theme: ${themeId}`);
+        this.emit('theme-changed', themeId);
+    }
+
+    _applyAccentOverrides(theme) {
+        if (!this._keyboardUI || typeof this._keyboardUI.get_children !== 'function') {
+            return;
+        }
+        const accentHex = this._accentColor || theme.colors['--betterkeys-accent'];
+        if (!accentHex) return;
+
+        const enterKeys = collectByStyleClass(this._keyboardUI, 'betterkeys-key-enter');
+        const modifierKeys = collectByStyleClass(this._keyboardUI, 'betterkeys-key-modifier-active');
+        enterKeys.forEach(k => {
+            try { k.set_style(`background-color: ${accentHex}; color: #ffffff;`); } catch (e) {}
+        });
+        modifierKeys.forEach(k => {
+            try { k.set_style(`background-color: ${accentHex}; color: #ffffff;`); } catch (e) {}
+        });
     }
 
     /**
@@ -606,23 +650,14 @@ class ThemeManager extends GObject.Object {
         this.setSystemThemeSync(false);
     }
 
-    /**
-     * Get CSS variables for a theme.
-     * @param {string} themeId - Theme identifier.
-     * @returns {string} CSS string.
-     */
     getThemeCSS(themeId) {
         const theme = this._themes.get(themeId);
         if (!theme) {
             return '';
         }
-
-        let css = ':root {\n';
-        Object.entries(theme.colors).forEach(([variable, value]) => {
-            css += `  ${variable}: ${value};\n`;
-        });
-        css += '}\n';
-        return css;
+        return Object.entries(theme.colors)
+            .map(([variable, value]) => `${variable}: ${value};`)
+            .join('\n') + '\n';
     }
 
     /**
@@ -702,15 +737,12 @@ class ThemeManager extends GObject.Object {
      * Clean up resources.
      */
     destroy() {
-        if (this._cssProvider) {
-            St.StyleContext.remove_provider_for_screen(
-                global.screen,
-                this._cssProvider
-            );
-            this._cssProvider = null;
+        if (this._keyboardUI && this._appliedThemeClass) {
+            try { this._keyboardUI.remove_style_class_name(this._appliedThemeClass); } catch (e) {}
         }
+        this._keyboardUI = null;
+        this._appliedThemeClass = null;
 
-        // Clean up system theme detection
         this._cleanupSystemThemeDetection();
 
         log('[betterKeys] ThemeManager destroyed');

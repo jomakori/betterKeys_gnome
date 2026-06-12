@@ -1,11 +1,12 @@
 /* src/ui/emoji-panel.js - Floating emoji selection panel */
 
-const { GObject, St, Clutter, Pango, Gtk } = imports.gi;
-const Main = imports.ui.main;
-const PanelMenu = imports.ui.panelMenu;
-const PopupMenu = imports.ui.popupMenu;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Pango from 'gi://Pango';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var EmojiPanel = GObject.registerClass(
+export const EmojiPanel = GObject.registerClass(
 class EmojiPanel extends St.BoxLayout {
     _init(emojiManager, settingsManager) {
         super._init({

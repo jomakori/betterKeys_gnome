@@ -2,6 +2,7 @@
   "name": "betterKeys",
   "description": "A better virtual keyboard for GNOME",
   "uuid": "betterkeys@jomakori.github.com",
-  "shell-version": ["49"],
+  "shell-version": ["45", "46", "47", "48", "49", "50"],
+  "settings-schema": "org.gnome.shell.extensions.betterkeys",
   "version": 1
 }

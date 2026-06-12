@@ -1,11 +1,13 @@
 /* src/prediction/ml-engine.js - Machine learning engine for advanced predictions */
 
-const { GObject, Gio, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
 /**
  * MLEngine - Neural network-based word prediction and learning
  */
-var MLEngine = GObject.registerClass(
+export const MLEngine = GObject.registerClass(
 class MLEngine extends GObject.Object {
     _init(vocabularyManager, settingsManager) {
         super._init();

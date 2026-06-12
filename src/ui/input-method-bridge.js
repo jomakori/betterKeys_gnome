@@ -1,19 +1,11 @@
 /* src/ui/input-method-bridge.js - Enhanced bridge between keyboard UI and text input with full IBus integration */
 
-const { GObject, St } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import { IBusIntegration } from '../input/ibus-integration.js';
 
-// Import our new IBus integration (if available)
-let IBusIntegration = null;
-try {
-    IBusIntegration = Me.imports.src.input['ibus-integration'].IBusIntegration;
-} catch (e) {
-    log('[betterKeys] IBusIntegration module not available, using fallback');
-}
-
-var betterKeysInputMethodBridge = GObject.registerClass(
-class betterKeysInputMethodBridge extends GObject.Object {
+export const InputMethodBridge = GObject.registerClass(
+class InputMethodBridge extends GObject.Object {
     _init(settingsManager) {
         super._init();
 
@@ -567,8 +559,7 @@ class betterKeysInputMethodBridge extends GObject.Object {
     }
 });
 
-// Add signals to the class
-betterKeysInputMethodBridge.signals = {
+InputMethodBridge.signals = {
     'focus-in': { param_types: [] },
     'focus-out': { param_types: [] },
     'ibus-key-event': { param_types: [GObject.TYPE_UINT, GObject.TYPE_UINT, GObject.TYPE_UINT] },
@@ -579,6 +570,3 @@ betterKeysInputMethodBridge.signals = {
     'lookup-table-hidden': { param_types: [] },
     'candidate-selected': { param_types: [GObject.TYPE_INT, GObject.TYPE_STRING] }
 };
-
-// Export the InputMethodBridge class
-var InputMethodBridge = betterKeysInputMethodBridge;

@@ -1,19 +1,27 @@
 /* src/settings/manager.js - Settings management for betterKeys */
 
-const { GObject, GLib } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 
-var SettingsManager = GObject.registerClass(
+export const SettingsManager = GObject.registerClass(
 class SettingsManager extends GObject.Object {
-    _init() {
+    _init(extension) {
         super._init();
 
-        this._settings = ExtensionUtils.getSettings('org.gnome.shell.extensions.betterkeys');
+        this._settings = extension.getSettings('org.gnome.shell.extensions.betterkeys');
+        this._changedId = 0;
 
         // Connect to settings changes
-        this._settings.connect('changed', this._onSettingsChanged.bind(this));
+        this._changedId = this._settings.connect('changed', this._onSettingsChanged.bind(this));
 
         log('[betterKeys] SettingsManager initialized');
+    }
+
+    destroy() {
+        if (this._changedId) {
+            this._settings.disconnect(this._changedId);
+            this._changedId = 0;
+        }
     }
 
     _onSettingsChanged(settings, key) {
@@ -94,6 +102,3 @@ class SettingsManager extends GObject.Object {
 SettingsManager.signals = {
     'changed': { param_types: [GObject.TYPE_STRING] }
 };
-
-// Export the SettingsManager class (already defined as SettingsManager)
-// var SettingsManager = SettingsManager; // Remove duplicate declaration

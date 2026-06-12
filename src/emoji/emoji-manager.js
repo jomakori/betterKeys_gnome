@@ -1,10 +1,10 @@
 /* src/emoji/emoji-manager.js - Emoji library management */
 
-const { GObject, Gio, GLib } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
 
-var EmojiManager = GObject.registerClass(
+export const EmojiManager = GObject.registerClass(
 class EmojiManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
@@ -39,12 +39,15 @@ class EmojiManager extends GObject.Object {
 
     _loadEmojiData() {
         try {
-            const emojiJsonPath = Me.dir.get_child('data').get_child('emoji').get_child('emoji.json').get_path();
+            // Resolve emoji.json path relative to this module
+            const modulePath = import.meta.url.replace('file://', '');
+            const extensionRoot = modulePath.replace(/\/src\/emoji\/emoji-manager\.js$/, '');
+            const emojiJsonPath = extensionRoot + '/data/emoji/emoji.json';
             const file = Gio.File.new_for_path(emojiJsonPath);
             const [success, contents] = file.load_contents(null);
 
             if (success) {
-                const json = imports.byteArray.toString(contents);
+                const json = new TextDecoder().decode(contents);
                 this._emojiData = JSON.parse(json);
                 this._buildIndex();
                 log(`[betterKeys] Loaded ${this._emojiData.length} emojis`);

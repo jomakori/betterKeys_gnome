@@ -1,30 +1,36 @@
-function init() {
-    log('[betterKeys] initializing');
-}
+import { Extension, gettext as _ } from 'resource:///org/gnome/shell/extensions/extension.js';
+import { KeyboardManager } from './src/main.js';
 
-function enable() {
-    try {
-        log('[betterKeys] enabling');
+export default class BetterKeysExtension extends Extension {
+    enable() {
+        this._signalHandlers = [];
+        this._keyboardManager = new KeyboardManager(this);
+        this._keyboardManager.enable();
 
-        // IMPORTANT: ExtensionUtils and Me must be loaded INSIDE the function,
-        // not at module level, to avoid ES6 module syntax errors in GNOME Shell
-        const ExtensionUtils = imports.misc.extensionUtils;
-        const Me = ExtensionUtils.getCurrentExtension();
-
-        const KeyboardManager = Me.imports.src.main.KeyboardManager;
-        const keyboardManager = new KeyboardManager();
-        keyboardManager.enable();
-
-        log('[betterKeys] enabled successfully');
-    } catch (error) {
-        logError('[betterKeys] enable error: ' + error);
+        if (global.workspace_manager) {
+            const id = global.workspace_manager.connect('active-workspace-changed', () => {
+                if (this._keyboardManager) this._keyboardManager.hideKeyboard();
+            });
+            this._signalHandlers.push({ object: global.workspace_manager, id });
+        }
+        if (global.display) {
+            const id = global.display.connect('monitors-changed', () => {
+                const core = this._keyboardManager && this._keyboardManager.getKeyboardCore();
+                if (core && core.updatePosition) core.updatePosition();
+            });
+            this._signalHandlers.push({ object: global.display, id });
+        }
     }
-}
 
-function disable() {
-    try {
-        log('[betterKeys] disabling');
-    } catch (error) {
-        logError('[betterKeys] disable error: ' + error);
+    disable() {
+        this._signalHandlers.forEach(({ object, id }) => {
+            try { if (object && object.disconnect) object.disconnect(id); } catch (e) {}
+        });
+        this._signalHandlers = [];
+
+        if (this._keyboardManager) {
+            this._keyboardManager.disable();
+            this._keyboardManager = null;
+        }
     }
 }

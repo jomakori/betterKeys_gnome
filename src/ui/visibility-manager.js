@@ -1,8 +1,11 @@
 /* src/ui/visibility-manager.js - Keyboard visibility management */
 
-const { GObject } = imports.gi;
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
+import Meta from 'gi://Meta';
+import Shell from 'gi://Shell';
 
-var VisibilityManager = GObject.registerClass(
+export const VisibilityManager = GObject.registerClass(
 class VisibilityManager extends GObject.Object {
     _init(settingsManager, windowManager) {
         super._init();
@@ -14,6 +17,7 @@ class VisibilityManager extends GObject.Object {
         this._autoShowEnabled = true;
         this._hotkeyId = 0;
         this._focusTracker = null;
+        this._keyFocusTracker = null;
         this._lastFocusedWindow = null;
         this._lastFocusedActor = null;
         this._visibilityTimeoutId = 0;
@@ -97,7 +101,7 @@ class VisibilityManager extends GObject.Object {
         this._focusTracker = global.display.connect('notify::focus-window', this._onFocusWindowChanged.bind(this));
 
         // Also track stage events for actor focus
-        global.stage.connect('notify::key-focus', this._onKeyFocusChanged.bind(this));
+        this._keyFocusTracker = global.stage.connect('notify::key-focus', this._onKeyFocusChanged.bind(this));
 
         log('[betterKeys] Started focus tracking');
     }
@@ -108,8 +112,10 @@ class VisibilityManager extends GObject.Object {
             this._focusTracker = null;
         }
 
-        // Disconnect stage events (simplified)
-        // In practice you'd need to keep reference
+        if (this._keyFocusTracker) {
+            global.stage.disconnect(this._keyFocusTracker);
+            this._keyFocusTracker = null;
+        }
     }
 
     _onFocusWindowChanged() {

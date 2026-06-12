@@ -1,9 +1,12 @@
 /* src/ui/window-manager.js - Keyboard window management */
 
-const { GObject, St, Clutter } = imports.gi;
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var betterKeysWindowManager = GObject.registerClass(
-class betterKeysWindowManager extends GObject.Object {
+export const WindowManager = GObject.registerClass(
+class WindowManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
 
@@ -20,13 +23,15 @@ class betterKeysWindowManager extends GObject.Object {
         this._isResizing = false;
         this._resizeStart = { x: 0, y: 0, width: 0, height: 0 };
         this._animationDuration = 200;
+        this._monitorsChangedId = 0;
+        this._workareasChangedId = 0;
 
         // Track active monitor
         this._updateMonitorGeometry();
 
         // Connect to monitor changes
-        global.display.connect('monitors-changed', this._onMonitorsChanged.bind(this));
-        global.display.connect('workareas-changed', this._onWorkareasChanged.bind(this));
+        this._monitorsChangedId = global.display.connect('monitors-changed', this._onMonitorsChanged.bind(this));
+        this._workareasChangedId = global.display.connect('workareas-changed', this._onWorkareasChanged.bind(this));
 
         log('[betterKeys] WindowManager initialized');
     }
@@ -270,7 +275,7 @@ class betterKeysWindowManager extends GObject.Object {
         if (this._isVisible || !this._window) return;
 
         // Add to stage
-        Main.uiGroup.add_child(this._window);
+        _getMain().uiGroup.add_child(this._window);
 
         // Set initial opacity for fade-in
         this._window.opacity = 0;
@@ -298,7 +303,7 @@ class betterKeysWindowManager extends GObject.Object {
             duration: this._animationDuration,
             mode: Clutter.AnimationMode.EASE_IN_QUAD,
             onComplete: () => {
-                Main.uiGroup.remove_child(this._window);
+                _getMain().uiGroup.remove_child(this._window);
                 this._isVisible = false;
                 log('[betterKeys] Keyboard window hidden');
             }
@@ -377,6 +382,15 @@ class betterKeysWindowManager extends GObject.Object {
     }
 
     destroy() {
+        if (this._monitorsChangedId) {
+            global.display.disconnect(this._monitorsChangedId);
+            this._monitorsChangedId = 0;
+        }
+        if (this._workareasChangedId) {
+            global.display.disconnect(this._workareasChangedId);
+            this._workareasChangedId = 0;
+        }
+
         if (this._window) {
             this.hide();
             this._window.destroy();
@@ -392,5 +406,4 @@ class betterKeysWindowManager extends GObject.Object {
     }
 });
 
-// Export the WindowManager class
-var WindowManager = betterKeysWindowManager;
+function _getMain() { return Main; }

@@ -1,13 +1,14 @@
 /* src/input/validator.js - Input validation and sanitization for security */
 
-const { GObject, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
 
 /**
  * InputValidator validates input events for security, sanitizes text,
  * filters invalid key codes, implements rate limiting, and prevents
  * malicious patterns.
  */
-var InputValidator = GObject.registerClass(
+export const InputValidator = GObject.registerClass(
 class InputValidator extends GObject.Object {
     _init(settingsManager) {
         super._init();

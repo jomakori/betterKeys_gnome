@@ -1,11 +1,13 @@
 /* src/keyboard/layout-adapter.js - Dynamic layout adaptation based on context */
 
-const { GObject, GLib, Meta } = imports.gi;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
+import Meta from 'gi://Meta';
 
 /**
  * LayoutAdapter - Adapts keyboard layout based on active window and input context
  */
-var LayoutAdapter = GObject.registerClass(
+export const LayoutAdapter = GObject.registerClass(
 class LayoutAdapter extends GObject.Object {
     _init(layoutManager, settingsManager) {
         super._init();

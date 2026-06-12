@@ -1,21 +1,20 @@
 /* src/keyboard/layout-manager.js - Keyboard layout loading, validation, and management with advanced features */
 
-const { GObject, Gio } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
 
 /**
  * LayoutManager loads keyboard layouts from JSON files, validates them,
  * supports multiple layout types, caching, and composition.
  */
-var LayoutManager = GObject.registerClass(
+export const LayoutManager = GObject.registerClass(
 class LayoutManager extends GObject.Object {
-    _init() {
+    _init(extension) {
         super._init();
 
         this._layouts = new Map(); // layoutId -> layout object
         this._layoutCache = new Map(); // layoutId -> cached layout (processed)
-        this._layoutDirectory = Me.dir.get_child('data').get_child('layouts');
+        this._layoutDirectory = extension.dir.get_child('data').get_child('layouts');
         this._defaultLayoutId = 'en_US_qwerty';
 
         // Supported layout types
@@ -80,7 +79,7 @@ class LayoutManager extends GObject.Object {
                 throw new Error('Failed to read file');
             }
 
-            const json = imports.byteArray.toString(contents);
+            const json = new TextDecoder().decode(contents);
             const layout = JSON.parse(json);
 
             // Validate layout

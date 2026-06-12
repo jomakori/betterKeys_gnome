@@ -1,17 +1,15 @@
 /* src/input/text-engine.js - Text input engine for character insertion, editing, clipboard, undo/redo */
 
-const { GObject } = imports.gi;
-
-// Import prediction modules
-const Predictor = imports.src.prediction.predictor;
-const Vocabulary = imports.src.prediction.vocabulary;
-const MLEngine = imports.src.prediction['ml-engine'];
+import GObject from 'gi://GObject';
+import { Predictor } from '../prediction/predictor.js';
+import { Vocabulary } from '../prediction/vocabulary.js';
+import { MLEngine } from '../prediction/ml-engine.js';
 
 /**
  * TextEngine handles text input operations including insertion, deletion,
  * selection, clipboard integration, and undo/redo management.
  */
-var TextEngine = GObject.registerClass(
+export const TextEngine = GObject.registerClass(
 class TextEngine extends GObject.Object {
     _init(settingsManager) {
         super._init();

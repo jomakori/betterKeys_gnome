@@ -1,12 +1,14 @@
 /* src/security/security-manager.js - Comprehensive security hardening and management */
 
-const { GObject, GLib, Gio, Gdk } = imports.gi;
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
 
 /**
  * SecurityManager - Centralized security hardening, validation, encryption,
  * permission management, sandboxing, and vulnerability scanning.
  */
-var SecurityManager = GObject.registerClass(
+export const SecurityManager = GObject.registerClass(
 class SecurityManager extends GObject.Object {
     _init(settingsManager) {
         super._init();

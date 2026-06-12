@@ -1,11 +1,13 @@
 /* src/input/voice-input.js - Voice input integration for betterKeys */
 
-const { GObject, St, Clutter, Gio, GLib, Gdk } = imports.gi;
-const Main = imports.ui.main;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import St from 'gi://St';
+import Clutter from 'gi://Clutter';
+import Gio from 'gi://Gio';
+import GLib from 'gi://GLib';
+import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 
-var VoiceInputManager = GObject.registerClass(
+export const VoiceInputManager = GObject.registerClass(
 class VoiceInputManager extends GObject.Object {
     _init(settingsManager, inputBridge) {
         super._init();
@@ -278,6 +280,3 @@ VoiceInputManager.signals = {
     'recognition-result': { param_types: [GObject.TYPE_STRING] },
     'permission-changed': { param_types: [GObject.TYPE_BOOLEAN] }
 };
-
-// Export the VoiceInputManager class
-// var VoiceInputManager = VoiceInputManager; // Removed duplicate identifier

@@ -1,12 +1,15 @@
 /* src/keyboard/manager.js - Keyboard lifecycle and state management */
 
-const { GObject, Clutter, GLib } = imports.gi;
+import GObject from 'gi://GObject';
+import Clutter from 'gi://Clutter';
+import GLib from 'gi://GLib';
+import Shell from 'gi://Shell';
 
 /**
  * KeyboardManager handles keyboard lifecycle, layout loading,
  * key state management, multi-touch, positioning, and window focus tracking.
  */
-var KeyboardManager = GObject.registerClass(
+export const KeyboardManager = GObject.registerClass(
 class KeyboardManager extends GObject.Object {
     _init(settingsManager) {
         super._init();
@@ -428,7 +431,7 @@ class KeyboardManager extends GObject.Object {
      */
     _setupWindowTracking() {
         try {
-            this._windowTracker = imports.ui.windowTracker.get_window_tracker();
+            this._windowTracker = Shell.WindowTracker.get_default();
             if (this._windowTracker) {
                 this._windowTracker.connect('notify::focus-app', this._onFocusAppChanged.bind(this));
             }

@@ -1,11 +1,12 @@
 /* src/input/ibus-integration.js - IBus integration for betterKeys */
 
-const { GObject, GLib, Gio, IBus } = imports.gi;
-const ExtensionUtils = imports.misc.extensionUtils;
-const Me = ExtensionUtils.getCurrentExtension();
+import GObject from 'gi://GObject';
+import GLib from 'gi://GLib';
+import Gio from 'gi://Gio';
+import IBus from 'gi://IBus';
 
-var betterKeysIBusIntegration = GObject.registerClass(
-class betterKeysIBusIntegration extends GObject.Object {
+export const IBusIntegration = GObject.registerClass(
+class IBusIntegration extends GObject.Object {
     _init(settingsManager) {
         super._init();
 
@@ -215,8 +216,9 @@ class betterKeysIBusIntegration extends GObject.Object {
         if (this._ibusConnection) {
             try {
                 this._ibusConnection.disconnect();
-            } catch (e) {}
-            this._ibusConnection = null;
+            } catch (e) {
+                logError(`[betterKeys] Error disconnecting IBus: ${e}`);
+            }
         }
         this._isConnected = false;
         log('[betterKeys] IBus integration disabled');
@@ -393,7 +395,7 @@ class betterKeysIBusIntegration extends GObject.Object {
 });
 
 // Add signals to the class
-betterKeysIBusIntegration.signals = {
+IBusIntegration.signals = {
     'key-event': { param_types: [GObject.TYPE_UINT, GObject.TYPE_UINT, GObject.TYPE_UINT] },
     'focus-in': { param_types: [] },
     'focus-out': { param_types: [] },
