@@ -4,13 +4,6 @@ import GObject from 'gi://GObject';
 import St from 'gi://St';
 import Clutter from 'gi://Clutter';
 
-const SPECIAL_KEYS = new Set([
-    'Enter', 'Backspace', 'Shift', 'Tab', 'Caps', 'Esc',
-    'Ctrl', 'Alt', 'Super', '?123', 'ABC', 'Space',
-]);
-
-const WIDE_KEYS = new Set(['Space']);
-
 /**
  * Map a key label to its style-class suffix.
  */
@@ -33,6 +26,7 @@ export const KeyboardUI = GObject.registerClass({
             reactive: true,
             can_focus: true,
             style_class: 'betterkeys-keyboard',
+            x_expand: true,
             layout_manager: new Clutter.BoxLayout({
                 orientation: Clutter.Orientation.VERTICAL,
                 spacing: 4,
@@ -75,11 +69,12 @@ export const KeyboardUI = GObject.registerClass({
                 style_class: 'betterkeys-row',
                 reactive: false,
                 x_expand: true,
-                x_align: Clutter.ActorAlign.CENTER,
+                x_align: Clutter.ActorAlign.FILL,
             });
 
             for (const keyLabel of rowDef.keys) {
                 const btn = this._createKeyButton(keyLabel, keyW, keyH);
+                btn.x_expand = true;
                 row.add_child(btn);
             }
 
@@ -89,39 +84,48 @@ export const KeyboardUI = GObject.registerClass({
     }
 
     _createKeyButton(label, defaultW, defaultH) {
-        const w = WIDE_KEYS.has(label) ? defaultW * 3 : defaultW;
         const suffix = styleSuffix(label);
+        let pressed = false;
 
         const btn = new St.Button({
             reactive: true,
             can_focus: true,
             style_class: `betterkeys-key${suffix ? ' betterkeys-key-' + suffix : ''}`,
-            width: w,
             height: defaultH,
             label: this._labelForDisplay(label),
             x_expand: false,
         });
 
-        btn.connect('clicked', () => {
-            this._handleKeyPress(label);
-        });
-
-        btn.connect('touch-event', (actor, event) => {
-            if (event.type() === Clutter.EventType.TOUCH_BEGIN) {
-                btn.add_style_pseudo_class('active');
-            } else if (event.type() === Clutter.EventType.TOUCH_END) {
+        const activate = () => {
+            if (pressed) {
+                pressed = false;
                 btn.remove_style_pseudo_class('active');
+                this._handleKeyPress(label);
             }
-            return Clutter.EVENT_PROPAGATE;
-        });
+        };
 
         btn.connect('button-press-event', () => {
+            pressed = true;
             btn.add_style_pseudo_class('active');
             return Clutter.EVENT_PROPAGATE;
         });
 
         btn.connect('button-release-event', () => {
-            btn.remove_style_pseudo_class('active');
+            activate();
+            return Clutter.EVENT_PROPAGATE;
+        });
+
+        btn.connect('touch-event', (actor, event) => {
+            const type = event.type();
+            if (type === 101 || type === Clutter.EventType?.TOUCH_BEGIN) {
+                pressed = true;
+                btn.add_style_pseudo_class('active');
+            } else if (type === 103 || type === Clutter.EventType?.TOUCH_END) {
+                activate();
+            } else if (type === 104 || type === Clutter.EventType?.TOUCH_CANCEL) {
+                pressed = false;
+                btn.remove_style_pseudo_class('active');
+            }
             return Clutter.EVENT_PROPAGATE;
         });
 

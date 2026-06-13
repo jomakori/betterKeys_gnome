@@ -17,12 +17,19 @@
 }
 
 .betterkeys-keyboard {
-    background-color: rgba(245, 245, 245, 0.96);
+    background-color: rgba(28, 28, 30, 0.97);
     border-radius: 14px;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
-    padding: 8px 6px;
-    spacing: 4px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.40),
+                0 0 1px rgba(0, 0, 0, 0.60);
+    padding: 2px 4px 8px 4px;
+}
+
+/* ---- header strip ---- */
+
+.betterkeys-header {
+    background-color: transparent;
+    padding: 3px 6px 1px 6px;
+    spacing: 0;
 }
 
 /* ---- key rows ---- */
@@ -35,73 +42,116 @@
 /* ---- individual keys ---- */
 
 .betterkeys-key {
-    background-color: #fafafa;
+    background-color: rgba(255, 255, 255, 0.08);
     border-radius: 8px;
-    border: 1px solid #d5d5d5;
-    color: #222222;
-    font-size: 15pt;
+    border: none;
+    color: #e8eaed;
+    font-size: 14pt;
     font-weight: 500;
     padding: 0 4px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06);
-    transition-duration: 80ms;
+    transition-duration: 60ms;
 }
 
 .betterkeys-key:hover {
-    background-color: #ebebeb;
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .betterkeys-key:active,
 .betterkeys-key-pressed {
-    background-color: #d0d0d0;
-    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+    background-color: rgba(255, 255, 255, 0.22);
 }
 
 /* ---- special key overrides ---- */
 
 .betterkeys-key-space {
-    min-width: 180px;
+    min-width: 200px;
 }
 
 .betterkeys-key-enter {
-    background-color: #3584e4;
-    border-color: #2a6fc0;
+    background-color: #4285f4;
     color: #ffffff;
+    font-weight: 600;
+    border-radius: 8px;
 }
 
 .betterkeys-key-enter:hover {
-    background-color: #4a94ea;
+    background-color: #5a95f5;
+}
+
+.betterkeys-key-enter:active {
+    background-color: #3367d6;
 }
 
 .betterkeys-key-backspace,
 .betterkeys-key-delete {
-    background-color: #e45a5a;
-    border-color: #c94a4a;
-    color: #ffffff;
+    background-color: rgba(234, 67, 53, 0.10);
+    color: #ea4335;
 }
 
 .betterkeys-key-backspace:hover,
 .betterkeys-key-delete:hover {
-    background-color: #e97474;
+    background-color: rgba(234, 67, 53, 0.18);
+}
+
+.betterkeys-key-backspace:active,
+.betterkeys-key-delete:active {
+    background-color: rgba(234, 67, 53, 0.28);
 }
 
 .betterkeys-key-shift,
 .betterkeys-key-symbol {
-    background-color: #b0b0b0;
-    border-color: #999999;
-    color: #ffffff;
+    background-color: rgba(255, 255, 255, 0.06);
+    color: rgba(255, 255, 255, 0.50);
+    font-size: 12pt;
 }
 
 .betterkeys-key-shift:hover,
 .betterkeys-key-symbol:hover {
-    background-color: #c0c0c0;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: rgba(255, 255, 255, 0.70);
+}
+
+.betterkeys-key-shift:active,
+.betterkeys-key-symbol:active {
+    background-color: rgba(255, 255, 255, 0.20);
 }
 
 .betterkeys-key-shift-active {
-    background-color: #3584e4;
-    border-color: #2a6fc0;
+    background-color: #4285f4;
     color: #ffffff;
 }
 
 .betterkeys-key-shift-active:hover {
-    background-color: #4a94ea;
+    background-color: #5a95f5;
+}
+
+/* ---- hide button (top-right header) ---- */
+
+.betterkeys-hide-btn {
+    background-color: transparent;
+    border-radius: 4px;
+    border: none;
+    color: rgba(255, 255, 255, 0.30);
+    font-size: 12pt;
+    width: 32px;
+    height: 22px;
+    padding: 0;
+    margin: 0;
+}
+
+.betterkeys-hide-btn:hover {
+    background-color: rgba(255, 255, 255, 0.10);
+    color: rgba(255, 255, 255, 0.60);
+}
+
+.betterkeys-hide-btn:active {
+    background-color: rgba(255, 255, 255, 0.16);
+    color: rgba(255, 255, 255, 0.80);
+}
+
+/* ---- bottom-edge swipe handle (visible when keyboard hidden) ---- */
+
+.betterkeys-swipe-handle {
+    background-color: rgba(255, 255, 255, 0.12);
+    border-radius: 4px;
 }

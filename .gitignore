@@ -14,3 +14,4 @@ npm-debug.log
 dist/
 *.tsbuildinfo
 betterkeys@jomakori.github.com.shell-extension
+**.sisyphus/

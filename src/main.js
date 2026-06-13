@@ -1,4 +1,5 @@
 import GObject from 'gi://GObject';
+import Gio from 'gi://Gio';
 import {SettingsManager} from './settings.js';
 import {LayoutManager} from './layout-manager.js';
 import {KeyboardUI} from './keyboard-ui.js';
@@ -42,9 +43,13 @@ class KeyboardManager extends GObject.Object {
 
         if (this._settings.getAutoShowEnabled())
             this._window.show();
+
+        this._suppressNativeOsk();
     }
 
     disable() {
+        this._restoreNativeOsk();
+
         this._input?.disable();
         this._input = null;
 
@@ -88,4 +93,34 @@ class KeyboardManager extends GObject.Object {
     show()   { this._window?.show(); }
     hide()   { this._window?.hide(); }
     toggle() { this._window?.toggle(); }
+
+    /* ---- native OSK suppression ---- */
+
+    _suppressNativeOsk() {
+        try {
+            this._a11ySettings = new Gio.Settings({
+                schema_id: 'org.gnome.desktop.a11y.applications',
+            });
+            this._nativeOskWasEnabled = this._a11ySettings.get_boolean(
+                'screen-keyboard-enabled'
+            );
+            if (this._nativeOskWasEnabled) {
+                this._a11ySettings.set_boolean('screen-keyboard-enabled', false);
+            }
+        } catch (e) {
+            this._a11ySettings = null;
+        }
+    }
+
+    _restoreNativeOsk() {
+        if (this._a11ySettings && this._nativeOskWasEnabled) {
+            try {
+                this._a11ySettings.set_boolean('screen-keyboard-enabled', true);
+            } catch (e) {
+                /* best effort */
+            }
+        }
+        this._a11ySettings = null;
+        this._nativeOskWasEnabled = false;
+    }
 });

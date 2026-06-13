@@ -1,91 +1,72 @@
-/* src/input-controller.js — IBus text commit for virtual keyboard output */
+/* src/input-controller.js — Virtual keyboard input via Clutter virtual device */
 
-import IBus from 'gi://IBus';
-import GLib from 'gi://GLib';
+import Clutter from 'gi://Clutter';
 
 export class InputController {
     constructor() {
-        this._bus = null;
-        this._engine = null;
-        this._ready = false;
+        this._enabled = false;
+        this._vdev = null;
     }
 
     enable() {
+        this._enabled = true;
         try {
-            this._bus = new IBus.Bus();
-            this._bus.connect('connected', () => {
-                this._bus.get_engine((engine) => {
-                    this._engine = engine;
-                    this._ready = true;
-                });
-            });
-            this._bus.connect('disconnected', () => {
-                this._ready = false;
-                this._engine = null;
-            });
-            if (!this._bus.is_connected())
-                this._bus.connect_sync();
+            const seat = Clutter.get_default_backend().get_default_seat();
+            this._vdev = seat.create_virtual_device(
+                Clutter.InputDeviceType.KEYBOARD_DEVICE
+            );
         } catch (e) {
-            logError(`[betterKeys] IBus init failed: ${e}`);
+            logError(e, '[betterKeys] virtual keyboard device unavailable');
+            this._vdev = null;
         }
     }
 
     disable() {
-        this._ready = false;
-        this._engine = null;
-        this._bus = null;
+        this._enabled = false;
+        this._vdev = null;
     }
 
-    /**
-     * Commit a single character or string via the IBus engine.
-     * Handles special-key semantics for Enter, Backspace, Tab.
-     */
     commit(keyLabel) {
-        if (!this._ready || !this._engine) {
-            /* Fallback: try direct commit even without engine */
-            return;
-        }
+        if (!this._enabled || !this._vdev) return;
+
+        let keyval;
+        let needsShift = false;
 
         switch (keyLabel) {
-            case 'Enter':
-                this._commitText('\n');
-                break;
-            case 'Backspace':
-            case 'Delete':
-                this._forwardKeyEvent(IBus.BACKSPACE, IBus.KEY_RELEASE);
-                break;
-            case 'Tab':
-                this._commitText('\t');
-                break;
-            case 'Space':
-                this._commitText(' ');
-                break;
+            case 'Enter':     keyval = Clutter.KEY_Return; break;
+            case 'Backspace': keyval = Clutter.KEY_BackSpace; break;
+            case 'Delete':    keyval = Clutter.KEY_Delete; break;
+            case 'Tab':       keyval = Clutter.KEY_Tab; break;
+            case 'Space':     keyval = Clutter.KEY_space; break;
+            case ' ':         keyval = Clutter.KEY_space; break;
             default:
-                if (keyLabel.length === 1)
-                    this._commitText(keyLabel);
+                if (keyLabel.length !== 1) return;
+                keyval = keyLabel.charCodeAt(0);
+                if (keyLabel >= 'A' && keyLabel <= 'Z')
+                    needsShift = true;
                 break;
         }
+
+        this._sendKeyval(keyval, needsShift);
     }
 
-    _commitText(text) {
+    _sendKeyval(keyval, withShift) {
         try {
-            this._engine.commit_text(text);
+            const time = Clutter.get_current_event_time();
+            if (withShift) {
+                this._vdev.notify_keyval(
+                    time, Clutter.KEY_Shift_L, Clutter.KeyState.PRESSED
+                );
+            }
+            this._vdev.notify_keyval(time, keyval, Clutter.KeyState.PRESSED);
+            this._vdev.notify_keyval(time, keyval, Clutter.KeyState.RELEASED);
+            if (withShift) {
+                this._vdev.notify_keyval(
+                    time, Clutter.KEY_Shift_L, Clutter.KeyState.RELEASED
+                );
+            }
         } catch (e) {
-            logError(`[betterKeys] commit_text failed: ${e}`);
-        }
-    }
-
-    _forwardKeyEvent(keyval, keycode, state) {
-        try {
-            const ev = new IBus.Event({
-                keyval,
-                keycode: keycode ?? 0,
-                state: state ?? 0,
-                time: GLib.get_monotonic_time() / 1000,
-            });
-            this._engine.forward_key_event(ev);
-        } catch (e) {
-            logError(`[betterKeys] forward_key_event failed: ${e}`);
+            logError(e, '[betterKeys] notify_keyval failed');
         }
     }
 }
